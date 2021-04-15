@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>solarium/Flash</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>283</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+      <Find-in-Files>
+        
+        
+        
+      <ColumnWidth0>503</ColumnWidth0><ColumnWidth1>62</ColumnWidth1><ColumnWidth2>754</ColumnWidth2></Find-in-Files>
+      <Build>
+        
+        
+        
+        
+      <ColumnWidth0>20</ColumnWidth0><ColumnWidth1>916</ColumnWidth1><ColumnWidth2>244</ColumnWidth2><ColumnWidth3>61</ColumnWidth3></Build>
+    <Debug-Log><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1222</ColumnWidth1></Debug-Log><TerminalIO/></Static>
+    <Windows>
+      
+      
+    <Wnd2>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-4922-2358</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>solarium</ExpandedNode><ExpandedNode>solarium/DRIVERS</ExpandedNode><ExpandedNode>solarium/PROJECT</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-31733-19868</Identity>
+            <TabName>Find in Files</TabName>
+            <Factory>Find-in-Files</Factory>
+            <Session/>
+          </Tab>
+          <Tab>
+            <Identity>TabID-17681-20541</Identity>
+            <TabName>Build</TabName>
+            <Factory>Build</Factory>
+            <Session/>
+          </Tab>
+        <Tab><Identity>TabID-13605-29828</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-31897-1342</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab></Tabs>
+        
+      <SelectedTab>1</SelectedTab></Wnd3></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\DRIVERS\fiscal\fiscal.h</Filename><XPos>0</XPos><YPos>148</YPos><SelStart>8715</SelStart><SelEnd>8715</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\service\fr.c</Filename><XPos>0</XPos><YPos>881</YPos><SelStart>24962</SelStart><SelEnd>24962</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\data\datadesc.c</Filename><XPos>0</XPos><YPos>445</YPos><SelStart>20342</SelStart><SelEnd>20342</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\app\modem_task.c</Filename><XPos>0</XPos><YPos>261</YPos><SelStart>9617</SelStart><SelEnd>9617</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\service\fr.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>299</SelStart><SelEnd>299</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\DRIVERS\fiscal\fiscal.c</Filename><XPos>0</XPos><YPos>71</YPos><SelStart>1914</SelStart><SelEnd>1914</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\app\app_serv.c</Filename><XPos>0</XPos><YPos>418</YPos><SelStart>15876</SelStart><SelEnd>15876</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\app\journal.c</Filename><XPos>0</XPos><YPos>41</YPos><SelStart>894</SelStart><SelEnd>911</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\menu\menudesc.c</Filename><XPos>0</XPos><YPos>894</YPos><SelStart>37543</SelStart><SelEnd>37543</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\data\datadesc.h</Filename><XPos>0</XPos><YPos>136</YPos><SelStart>5102</SelStart><SelEnd>5102</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\version.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>77</SelStart><SelEnd>77</SelEnd></Tab><ActiveTab>10</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-0028e3d0><key>iaridepm.enu1</key></Toolbar-0028e3d0></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>673</Bottom><Right>357</Right><x>-2</x><y>-2</y><xscreen>224</xscreen><yscreen>0</yscreen><sizeHorzCX>116667</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>186979</sizeVertCX><sizeVertCY>688776</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>259</Bottom><Right>1922</Right><x>-2</x><y>-2</y><xscreen>1924</xscreen><yscreen>261</yscreen><sizeHorzCX>1002083</sizeHorzCX><sizeHorzCY>266327</sizeHorzCY><sizeVertCX>116667</sizeVertCX><sizeVertCY>0</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

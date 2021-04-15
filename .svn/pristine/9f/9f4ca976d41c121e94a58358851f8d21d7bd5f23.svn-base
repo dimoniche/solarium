@@ -1,0 +1,42 @@
+#include "cpu.h"
+#include "datadesc.h"
+#include "journal.h"
+
+
+typedef struct{
+
+  CPU_INT32U SerialNum;
+
+  TChannelConfig ChannelConfig;
+
+  TDeviceConfig DeviceConfig;
+
+  // счетчики
+  TCounters Counters;
+
+  // длинные счетчики с CRC16 
+  TCountersLong CountersLong;
+
+  CPU_INT32U FRAM_AcceptedMoney;
+  CPU_INT32U crc_AcceptedMoney;
+  
+  // журнал ошибок
+  TErrorRecord ErrorRecords[ERROR_RECORDS_NUM];
+  // журнал событий
+  TEventRecord EventRecords[EVENT_RECORDS_NUM];
+
+  CPU_INT32U Pass;
+  CPU_INT32U crc_Pass;
+
+  CPU_INT32U LastEmailTime;
+
+  CPU_INT32U IncasEmailFlag;
+  CPU_INT32U IncasMoney;
+  CPU_INT32U IncasTime;
+
+  CPU_INT32U StartButtonName;
+
+  CPU_INT32U  DefferedStartEnabled[CHANNELS_NUM];
+    
+}TFramMap;
+
