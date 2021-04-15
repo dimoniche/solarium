@@ -980,6 +980,9 @@
       <file>
         <name>$PROJ_DIR$\DRIVERS\lcd\lcd.h</name>
       </file>
+      <file>
+        <name>$PROJ_DIR$\DRIVERS\lcd\symtab.h</name>
+      </file>
     </group>
     <group>
       <name>modem</name>

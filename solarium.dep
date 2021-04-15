@@ -2,7 +2,7 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>898057904</fileChecksum>
+  <fileChecksum>4234943682</fileChecksum>
   <configuration>
     <name>Flash</name>
     <outputs>
@@ -245,6 +245,8 @@
       <file>$PROJ_DIR$\OS\bsp\iolpc2368.h</file>
       <file>$PROJ_DIR$\DRIVERS\ccnet\uart1.h</file>
       <file>$PROJ_DIR$\OS\bsp\LPC2368_Flash.icf</file>
+      <file>$PROJ_DIR$\Flash\Exe\solarium_3_30.hex</file>
+      <file>$PROJ_DIR$\DRIVERS\lcd\symtab.h</file>
     </outputs>
     <file>
       <name>[ROOT_NODE]</name>
@@ -499,6 +501,10 @@
       </outputs>
       <inputs>
         <tool>
+          <name>BICOMP</name>
+          <file> 228 31 92 11 15 138 80 81 154 14 148 121 88 90 177 87 153 125 22 9 171 236 25 188 227 229 187 210 191 186 202 183 84 91 221 44 39 199 219 47 79</file>
+        </tool>
+        <tool>
           <name>ICCARM</name>
           <file> 228 31 92 11 15 95 138 80 81 154 14 148 121 88 90 177 87 153 125 22 9 171 236 25 188 227 229 187 210 191 186 202 183 84 91 221 44 39 199 219 47 79</file>
         </tool>
@@ -555,7 +561,7 @@
       <outputs>
         <tool>
           <name>OBJCOPY</name>
-          <file> 128</file>
+          <file> 239</file>
         </tool>
       </outputs>
       <inputs>

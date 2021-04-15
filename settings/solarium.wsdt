@@ -12,7 +12,7 @@
           
           
           
-        <Column0>163</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+        <Column0>199</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
       </Workspace>
       <Find-in-Files>
         
@@ -29,7 +29,7 @@
     <Windows>
       
       
-    <Wnd2>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-4922-2358</Identity>
@@ -37,11 +37,11 @@
             <Factory>Workspace</Factory>
             <Session>
               
-            <NodeDict><ExpandedNode>solarium</ExpandedNode><ExpandedNode>solarium/DRIVERS</ExpandedNode><ExpandedNode>solarium/DRIVERS/ccnet</ExpandedNode><ExpandedNode>solarium/DRIVERS/fram</ExpandedNode><ExpandedNode>solarium/DRIVERS/keyboard</ExpandedNode><ExpandedNode>solarium/PROJECT</ExpandedNode><ExpandedNode>solarium/PROJECT/app</ExpandedNode><ExpandedNode>solarium/PROJECT/data</ExpandedNode><ExpandedNode>solarium/PROJECT/menu</ExpandedNode></NodeDict></Session>
+            <NodeDict><ExpandedNode>solarium</ExpandedNode><ExpandedNode>solarium/DRIVERS</ExpandedNode><ExpandedNode>solarium/DRIVERS/lcd</ExpandedNode><ExpandedNode>solarium/PROJECT</ExpandedNode><ExpandedNode>solarium/PROJECT/app</ExpandedNode><ExpandedNode>solarium/PROJECT/data</ExpandedNode><ExpandedNode>solarium/PROJECT/menu</ExpandedNode></NodeDict></Session>
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
         <Tabs>
           <Tab>
             <Identity>TabID-31733-19868</Identity>
@@ -57,20 +57,20 @@
           </Tab>
         <Tab><Identity>TabID-13605-29828</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-31897-1342</Identity><TabName>Breakpoints</TabName><Factory>Breakpoints</Factory></Tab></Tabs>
         
-      <SelectedTab>1</SelectedTab></Wnd3></Windows>
+      <SelectedTab>1</SelectedTab></Wnd1></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\version.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>77</SelStart><SelEnd>77</SelEnd></Tab><ActiveTab>0</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\PROJECT\version.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>110</SelStart><SelEnd>110</SelEnd></Tab><ActiveTab>0</ActiveTab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-051c29c8><key>iaridepm.enu1</key></Toolbar-051c29c8></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>519</Bottom><Right>254</Right><x>-2</x><y>-2</y><xscreen>160</xscreen><yscreen>0</yscreen><sizeHorzCX>117130</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>187408</sizeVertCX><sizeVertCY>718621</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>161</Bottom><Right>1368</Right><x>-2</x><y>-2</y><xscreen>1370</xscreen><yscreen>163</yscreen><sizeHorzCX>1002928</sizeHorzCX><sizeHorzCY>224828</sizeHorzCY><sizeVertCX>117130</sizeVertCX><sizeVertCY>0</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-051c29c8><key>iaridepm.enu1</key></Toolbar-051c29c8></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>519</Bottom><Right>290</Right><x>-2</x><y>-2</y><xscreen>160</xscreen><yscreen>0</yscreen><sizeHorzCX>117130</sizeHorzCX><sizeHorzCY>0</sizeHorzCY><sizeVertCX>213763</sizeVertCX><sizeVertCY>718621</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>161</Bottom><Right>1368</Right><x>-2</x><y>-2</y><xscreen>1370</xscreen><yscreen>163</yscreen><sizeHorzCX>1002928</sizeHorzCX><sizeHorzCY>224828</sizeHorzCY><sizeVertCX>117130</sizeVertCX><sizeVertCY>0</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 
