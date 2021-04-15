@@ -136,6 +136,13 @@ void  InitImpInput (void)
     FIO0DIR_bit.P0_23  = 0;
     FIO0MASK_bit.P0_23 = 0;
 
+    // inhibit
+//    PINSEL1_bit.P0_24 = 0x0;
+//    PINMODE1_bit.P0_24 = 0;
+//    FIO0DIR_bit.P0_24  = 1;
+//    FIO0MASK_bit.P0_24 = 0;
+//    FIO0SET_bit.P0_24  = 1;
+  
     pclk_freq         =   BSP_CPU_PclkFreq(23);
     rld_cnts          =   pclk_freq / INPUT_CAPTURE_FREQ;
 

@@ -915,21 +915,49 @@ const TMenuLine line_FrMenu_3 = {
 };
 
 const TMenuLine line_FrMenu_4 = {
+  MENU_LINE_SHOW_DESC,
+  0,
+  (void*)&CommandV2Desc,
+  NULL
+};
+
+const TMenuLine line_FrMenu_5 = {
+  MENU_LINE_SHOW_DESC,
+  0,
+  (void*)&TaxSystemDesc,
+  NULL
+};
+
+const TMenuLine line_FrMenu_6 = {
+  MENU_LINE_SHOW_DESC,
+  0,
+  (void*)&TaxFormatDesc,
+  NULL
+};
+
+const TMenuLine line_FrMenu_7 = {
+  MENU_LINE_SHOW_DESC,
+  0,
+  (void*)&SubjSellDesc,
+  NULL
+};
+
+const TMenuLine line_FrMenu_8 = {
   MENU_LINE_SHOW_DESC,               // ??? ?????? ????
   0,                              // ???. ?????  
   (void*)&ServiceNameDesc,       // ????????? ?? ????????? ?????? ??? ??????????
   NULL                            // ?????? ??? ????????
 };
 
-const TMenuLine line_FrMenu_5 = {
+const TMenuLine line_FrMenu_9 = {
   MENU_LINE_SHOW_DESC, 
   0,                   
   (void*)&DisableFiscalErrorsDesc,
   NULL                     
 };
 
-const TMenuLineArray arr_FrMenuArray[] = {&line_FrMenu_0, &line_FrMenu_1, &line_FrMenu_2, &line_FrMenu_3, &line_FrMenu_4, &line_FrMenu_5, NULL};
-const TMenuPanel FrMenuPanel[] = {arr_FrMenuArray, NULL, 6, MENU_PANEL_STANDARD};
+const TMenuLineArray arr_FrMenuArray[] = {&line_FrMenu_0, &line_FrMenu_1, &line_FrMenu_2, &line_FrMenu_3, &line_FrMenu_4, &line_FrMenu_5, &line_FrMenu_6, &line_FrMenu_7, &line_FrMenu_8, &line_FrMenu_9, NULL};
+const TMenuPanel FrMenuPanel[] = {arr_FrMenuArray, NULL, 10, MENU_PANEL_STANDARD};
 
 /***********************************
   Ã≈Õﬁ Õ¿—“–Œ… ¿ ÃŒÕ≈“Œœ–»≈ÃÕ» ¿

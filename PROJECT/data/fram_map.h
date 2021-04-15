@@ -37,6 +37,11 @@ typedef struct{
   CPU_INT32U StartButtonName;
 
   CPU_INT32U  DefferedStartEnabled[CHANNELS_NUM];
-    
+
+  CPU_INT32U  TaxFormat;
+  CPU_INT32U  SubjSell;
+  CPU_INT32U  CommandV2;
+  CPU_INT32U  TaxSystem;
+  
 }TFramMap;
 

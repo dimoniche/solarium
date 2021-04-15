@@ -59,11 +59,19 @@ extern CPU_INT08U  FiscalState;
 
 #define FISC_MAKE_SELL           0x80
 #define FISC_CLOSE_BILL          0x85
+#define FISC_CANSEL_BILL         0x88
 
+#define FISC_EXTENDED_CMD           0xFF
+
+#define FISC_OPEN_DAY            0xE0
 #define FISC_PRINT_CONTINUE      0xB0
 
 #define FISC_PRINT_DAY_REPORT_TO_BUF      0xC6
 #define FISC_PRINT_DAY_REPORT_FROM_BUF    0xC7
+
+#define FISC_WRITE_TABLE            0x1E
+#define FISC_READ_TABLE             0x1F
+
 
 // переопределение функций передачи
 #define FiscPurgeRx           Uart0_Flush
@@ -83,165 +91,128 @@ extern CPU_INT08U  FiscalState;
 #define FISC_ERR    -1
 
 // коды ошибок ФР
-#define FR_ERROR_CODE_1    0x1  //Неисправен накопитель ФП 1, ФП 2 или часы 
-#define FR_ERROR_CODE_2    0x2  //Отсутствует ФП 1 
-#define FR_ERROR_CODE_3    0x3  //Отсутствует ФП 2 
-#define FR_ERROR_CODE_4    0x4  //Некорректные параметры в команде обращения к ФП 
-#define FR_ERROR_CODE_5    0x5  //Нет запрошенных данных 
-#define FR_ERROR_CODE_6    0x6  //ФП в режиме вывода данных 
-#define FR_ERROR_CODE_7    0x7  //Некорректные параметры в команде для данной реализации ФП 
-#define FR_ERROR_CODE_8    0x8  //Команда не поддерживается в данной реализации ФП 
-#define FR_ERROR_CODE_9    0x9  //Некорректная длина команды 
-#define FR_ERROR_CODE_a    0x0A  //Формат данных не BCD 
-#define FR_ERROR_CODE_b    0x0B  //Неисправна ячейка памяти ФП при записи итога 
-#define FR_ERROR_CODE_11    0x11  //Не введена лицензия 
-#define FR_ERROR_CODE_12    0x12  //Заводской номер уже введен 
-#define FR_ERROR_CODE_13    0x13  //Текущая дата меньше даты последней записи в ФП 
-#define FR_ERROR_CODE_14    0x14  //Область сменных итогов ФП переполнена 
-#define FR_ERROR_CODE_15    0x15  //Смена уже открыта 
-#define FR_ERROR_CODE_16    0x16  //Смена не открыта  // 
-#define FR_ERROR_CODE_17    0x17  //Номер первой смены больше номера последней смены  // 
-#define FR_ERROR_CODE_18    0x18  //Дата первой смены больше даты последней смены  // 
-#define FR_ERROR_CODE_19    0x19  //Нет данных в ФП  // 
-#define FR_ERROR_CODE_1a    0x1A  //Область перерегистраций в ФП переполнена  // 
-#define FR_ERROR_CODE_1b    0x1B  //Заводской номер не введен  // 
-#define FR_ERROR_CODE_1c    0x1C  //В заданном диапазоне есть поврежденная запись  // 
-#define FR_ERROR_CODE_1d    0x1D  //Повреждена последняя запись сменных итогов  // 
-#define FR_ERROR_CODE_1f    0x1F  //Отсутствует память регистров  // 
-#define FR_ERROR_CODE_20    0x20  //Переполнение денежного регистра при добавлении  // 
-#define FR_ERROR_CODE_21    0x21  //Вычитаемая сумма больше содержимого денежного регистра  // 
-#define FR_ERROR_CODE_22    0x22  //Неверная дата  // 
-#define FR_ERROR_CODE_23    0x23  //Нет записи активизации  // 
-#define FR_ERROR_CODE_24    0x24  //Область активизаций переполнена  // 
-#define FR_ERROR_CODE_25    0x25  //Нет активизации с запрашиваемым номером  // 
-#define FR_ERROR_CODE_28    0x28  //В ФР более 2х сбойных записей  // 
-#define FR_ERROR_CODE_33    0x33  //Некорректные параметры в команде  // 
-#define FR_ERROR_CODE_35    0x35  //Некорректный параметр при данных настройках  // 
-#define FR_ERROR_CODE_36    0x36  //Некорректные параметры в команде для данной реализации ФР  // 
-#define FR_ERROR_CODE_37    0x37  //Команда не поддерживается в данной реализации ФР  // 
-#define FR_ERROR_CODE_38    0x38  //Ошибка в ПЗУ  //+ 
-#define FR_ERROR_CODE_39    0x39  //Внутренняя ошибка ПО ФР  // 
-#define FR_ERROR_CODE_3a    0x3A  //Переполнение накопления по надбавкам в смене  // 
-#define FR_ERROR_CODE_3c    0x3C  //ЭКЛЗ: неверный регистрационный номер  // 
-#define FR_ERROR_CODE_3e    0x3E  //Переполнение накопления по секциям в смене  // 
-#define FR_ERROR_CODE_3f    0x3F  //Переполнение накопления по скидкам в смене  // 
-#define FR_ERROR_CODE_40    0x40  //Переполнение диапазона скидок  // 
-#define FR_ERROR_CODE_41    0x41  //Переполнение диапазона оплаты наличными  // 
-#define FR_ERROR_CODE_42    0x42  //Переполнение диапазона оплаты типом 2  // 
-#define FR_ERROR_CODE_43    0x43  //Переполнение диапазона оплаты типом 3  // 
-#define FR_ERROR_CODE_44    0x44  //Переполнение диапазона оплаты типом 4 
-#define FR_ERROR_CODE_45    0x45  //Cумма всех типов оплаты меньше итога чека  // 
-#define FR_ERROR_CODE_46    0x46  //Не хватает наличности в кассе  // 
-#define FR_ERROR_CODE_47    0x47  //Переполнение накопления по налогам в смене  // 
-#define FR_ERROR_CODE_48    0x48  //Переполнение итога чека  // 
-#define FR_ERROR_CODE_4a    0x4A  //Открыт чек - операция невозможна  // 
-#define FR_ERROR_CODE_4b    0x4B  //Буфер чека переполнен  // 
-#define FR_ERROR_CODE_4c    0x4C  //Переполнение накопления по обороту налогов в смене  // 
-#define FR_ERROR_CODE_4d    0x4D  //Вносимая безналичной оплатой сумма больше суммы чека  // 
-#define FR_ERROR_CODE_4e    0x4E  //Смена превысила 24 часа  // 
-#define FR_ERROR_CODE_4f    0x4F  //Неверный пароль  // 
-#define FR_ERROR_CODE_50    0x50  //Идет печать предыдущей команды  // 
-#define FR_ERROR_CODE_51    0x51  //Переполнение накоплений наличными в смене  // 
-#define FR_ERROR_CODE_52    0x52  //Переполнение накоплений по типу оплаты 2 в смене  // 
-#define FR_ERROR_CODE_53    0x53  //Переполнение накоплений по типу оплаты 3 в смене  // 
-#define FR_ERROR_CODE_54    0x54  //Переполнение накоплений по типу оплаты 4 в смене  // 
-#define FR_ERROR_CODE_56    0x56  //Нет документа для повтора  // 
-#define FR_ERROR_CODE_57    0x57  //ЭКЛЗ: количество закрытых смен не совпадает с ФП  // 
-#define FR_ERROR_CODE_58    0x58  //Ожидание команды продолжения печати  // 
-#define FR_ERROR_CODE_59    0x59  //Документ открыт другим оператором  // 
-#define FR_ERROR_CODE_5b    0x5B  //Переполнение диапазона надбавок  // 
-#define FR_ERROR_CODE_5c    0x5C  //Понижено напряжение 24В
-#define FR_ERROR_CODE_5d    0x5D  //Таблица не определена  // 
-#define FR_ERROR_CODE_5e    0x5E  //Некорректная операция  // 
-#define FR_ERROR_CODE_5f    0x5F  //Отрицательный итог чека  // 
-#define FR_ERROR_CODE_60    0x60  //Переполнение при умножении  // 
-#define FR_ERROR_CODE_61    0x61  //Переполнение диапазона цены  // 
-#define FR_ERROR_CODE_62    0x62  //Переполнение диапазона количества  // 
-#define FR_ERROR_CODE_63    0x63  //Переполнение диапазона отдела  // 
-#define FR_ERROR_CODE_64    0x64  //ФП отсутствует  //+ 
-#define FR_ERROR_CODE_65    0x65  //Не хватает денег в секции  // 
-#define FR_ERROR_CODE_66    0x66  //Переполнение денег в секции  // 
-#define FR_ERROR_CODE_67    0x67  //Ошибка связи с ФП  //+ 
-#define FR_ERROR_CODE_68    0x68  //Не хватает денег по обороту налогов  // 
-#define FR_ERROR_CODE_69    0x69  //Переполнение денег по обороту налогов  // 
-#define FR_ERROR_CODE_6a    0x6A  //Ошибка питания в момент ответа по I
-#define FR_ERROR_CODE_6b    0x6B  //Нет чековой ленты  // 
-#define FR_ERROR_CODE_6c    0x6C  //Нет контрольной ленты  // 
-#define FR_ERROR_CODE_6d    0x6D  //Не хватает денег по налогу  // 
-#define FR_ERROR_CODE_6e    0x6E  //Переполнение денег по налогу  // 
-#define FR_ERROR_CODE_6f    0x6F  //Переполнение по выплате в смене  // 
-#define FR_ERROR_CODE_70    0x70  //Переполнение ФП  // 
-#define FR_ERROR_CODE_71    0x71  //Ошибка отрезчика  //+ 
-#define FR_ERROR_CODE_72    0x72  //Команда не поддерживается в данном подрежиме  // 
-#define FR_ERROR_CODE_73    0x73  //Команда не поддерживается в данном режиме  // 
-#define FR_ERROR_CODE_74    0x74  //Ошибка ОЗУ  // 
-#define FR_ERROR_CODE_75    0x75  //Ошибка питания  //+ 
-#define FR_ERROR_CODE_76    0x76  //Ошибка принтера: нет импульсов с тахогенератора  //+ 
-#define FR_ERROR_CODE_77    0x77  //Ошибка принтера: нет сигнала с датчиков  //+ 
-#define FR_ERROR_CODE_78    0x78  //Замена ПО  // 
-#define FR_ERROR_CODE_79    0x79  //Замена ФП  // 
-#define FR_ERROR_CODE_7a    0x7A  //Поле не редактируется 
-#define FR_ERROR_CODE_7b    0x7B  //Ошибка оборудования  // 
-#define FR_ERROR_CODE_7c    0x7C  //Не совпадает дата  // 
-#define FR_ERROR_CODE_7d    0x7D  //Неверный формат даты  // 
-#define FR_ERROR_CODE_7e    0x7E  //Неверное значение в поле длины  // 
-#define FR_ERROR_CODE_7f    0x7F  //Переполнение диапазона итога чека  // 
-#define FR_ERROR_CODE_80    0x80  //Ошибка связи с ФП  //+ 
-#define FR_ERROR_CODE_81    0x81  //Ошибка связи с ФП  //+ 
-#define FR_ERROR_CODE_82    0x82  //Ошибка связи с ФП  //+ 
-#define FR_ERROR_CODE_83    0x83  //Ошибка связи с ФП  //+ 
-#define FR_ERROR_CODE_84    0x84  //Переполнение наличности  // 
-#define FR_ERROR_CODE_85    0x85  //Переполнение по продажам в смене  // 
-#define FR_ERROR_CODE_86    0x86  //Переполнение по покупкам в смене  // 
-#define FR_ERROR_CODE_87    0x87  //Переполнение по возвратам продаж в смене  // 
-#define FR_ERROR_CODE_88    0x88  //Переполнение по возвратам покупок в смене  // 
-#define FR_ERROR_CODE_89    0x89  //Переполнение по внесению в смене  // 
-#define FR_ERROR_CODE_8a    0x8A  //Переполнение по надбавкам в чеке  // 
-#define FR_ERROR_CODE_8b    0x8B  //Переполнение по скидкам в чеке  // 
-#define FR_ERROR_CODE_8c    0x8C  //Отрицательный итог надбавки в чеке  // 
-#define FR_ERROR_CODE_8d    0x8D  //Отрицательный итог скидки в чеке  // 
-#define FR_ERROR_CODE_8e    0x8E  //Нулевой итог чека  // 
-#define FR_ERROR_CODE_8f    0x8F  //Касса не фискализирована  //  //
+#define FR_ERROR_CODE_1     0x1   //Неизвестная команда
+#define FR_ERROR_CODE_2     0x2   //Неверное состояние ФН 
+#define FR_ERROR_CODE_3     0x3   //Ошибка ФН 
+#define FR_ERROR_CODE_4     0x4   //Ошибка КС
+#define FR_ERROR_CODE_5     0x5   //Закончен срок эксплуатации ФН
+#define FR_ERROR_CODE_6     0x6   //Архив ФН переполнен
+#define FR_ERROR_CODE_7     0x7   //Неверные дата и/или время 
+#define FR_ERROR_CODE_8     0x8   //Нет запрошенных данных 
+#define FR_ERROR_CODE_9     0x9   //Некорректное значение параметров команды
+#define FR_ERROR_CODE_10    0x10  //Превышение размеров TLV данных
+#define FR_ERROR_CODE_11    0x11  //Нет транспортного соединения
+#define FR_ERROR_CODE_12    0x12  //Исчерпан ресурс КС
+#define FR_ERROR_CODE_14    0x14  //Исчерпан ресурс хранения
+#define FR_ERROR_CODE_15    0x15  //Исчерпан ресурс Ожидания передачи сообщения
+#define FR_ERROR_CODE_16    0x16  //Продолжительность смены более 24 часов
+#define FR_ERROR_CODE_17    0x17  //Неверная разница во времени между 2 операцими 
+#define FR_ERROR_CODE_20    0x20  //Сообщение от ОФД не может быть принято
+#define FR_ERROR_CODE_2F    0x2F  //Таймаут обмена с ФН
+#define FR_ERROR_CODE_30    0x30  //ФН не отвечает
+#define FR_ERROR_CODE_33    0x33  //Некорректные параметры в команде
+#define FR_ERROR_CODE_34    0x34  //Нет данных
+#define FR_ERROR_CODE_35    0x35  //Некорректный параметр при данных настройках 
+#define FR_ERROR_CODE_36    0x36  //Некорректные параметры в команде для данной реализации ККТ
+#define FR_ERROR_CODE_37    0x37  //Команда не поддерживается в данной реализации ККТ
+#define FR_ERROR_CODE_38    0x38  //Ошибка в ПЗУ
+#define FR_ERROR_CODE_39    0x39  //Внутренняя ошибка ПО ККТ
+#define FR_ERROR_CODE_3a    0x3A  //Переполнение накопления по надбавкам в смене
+#define FR_ERROR_CODE_3c    0x3C  //Смена открыта – операция не возможна
+#define FR_ERROR_CODE_3D    0x3D  //Смена не открыта – операция не возможна 
+#define FR_ERROR_CODE_3E    0x3E  //Переполнение накопления по секциям в смене
+#define FR_ERROR_CODE_3F    0x3F  //Переполнение накопления по скидкам в смене
+#define FR_ERROR_CODE_40    0x40  //Переполнение диапазона скидок
+#define FR_ERROR_CODE_41    0x41  //Переполнение диапазона оплаты наличными
+#define FR_ERROR_CODE_42    0x42  //Переполнение диапазона оплаты типом 2
+#define FR_ERROR_CODE_43    0x43  //Переполнение диапазона оплаты типом 3
+#define FR_ERROR_CODE_44    0x44  //Переполнение диапазона оплаты типом 4
+#define FR_ERROR_CODE_45    0x45  //Cумма всех типов оплаты меньше итога чека
+#define FR_ERROR_CODE_46    0x46  //Не хватает наличности в кассе
+#define FR_ERROR_CODE_47    0x47  //Переполнение накопления по налогам в смене
+#define FR_ERROR_CODE_48    0x48  //Переполнение итога чека
+#define FR_ERROR_CODE_49    0x49  //Операция невозможна в открытом чеке данного типа
+#define FR_ERROR_CODE_4A    0x4A  //Открыт чек - операция невозможна
+#define FR_ERROR_CODE_4B    0x4B  //Буфер чека переполнен
+#define FR_ERROR_CODE_4C    0x4C  //Переполнение накопления по обороту налогов в смене
+#define FR_ERROR_CODE_4D    0x4D  //Вносимая безналичной оплатой сумма больше суммы чека
+#define FR_ERROR_CODE_4E    0x4E  //Смена превысила 24 часа
+#define FR_ERROR_CODE_4F    0x4F  //Неверный пароль
+#define FR_ERROR_CODE_50    0x50  //Идет печать предыдущей команды
+#define FR_ERROR_CODE_51    0x51  //Переполнение накоплений наличными в смене
+#define FR_ERROR_CODE_52    0x52  //Переполнение накоплений по типу оплаты 2 в смене
+#define FR_ERROR_CODE_53    0x53  //Переполнение накоплений по типу оплаты 3 в смене
+#define FR_ERROR_CODE_54    0x54  //Переполнение накоплений по типу оплаты 4 в смене
+#define FR_ERROR_CODE_55    0x55  //Чек закрыт – операция невозможна
+#define FR_ERROR_CODE_56    0x56  //Нет документа для повтора
+#define FR_ERROR_CODE_58    0x58  //Ожидание команды продолжения печати
+#define FR_ERROR_CODE_59    0x59  //Документ открыт другим оператором
+#define FR_ERROR_CODE_5B    0x5B  //Переполнение диапазона надбавок
+#define FR_ERROR_CODE_5C    0x5C  //Понижено напряжение 24В
+#define FR_ERROR_CODE_5D    0x5D  //Таблица не определена
+#define FR_ERROR_CODE_5E    0x5E  //Некорректная операция
+#define FR_ERROR_CODE_5F    0x5F  //Отрицательный итог чека
+#define FR_ERROR_CODE_60    0x60  //Переполнение при умножении
+#define FR_ERROR_CODE_61    0x61  //Переполнение диапазона цены
+#define FR_ERROR_CODE_62    0x62  //Переполнение диапазона количества
+#define FR_ERROR_CODE_63    0x63  //Переполнение диапазона отдела
+#define FR_ERROR_CODE_65    0x65  //Не хватает денег в секции
+#define FR_ERROR_CODE_66    0x66  //Переполнение денег в секции
+#define FR_ERROR_CODE_68    0x68  //Не хватает денег по обороту налогов
+#define FR_ERROR_CODE_69    0x69  //Переполнение денег по обороту налогов
+#define FR_ERROR_CODE_6A    0x6A  //Ошибка питания в момент ответа по I2C
+#define FR_ERROR_CODE_6B    0x6B  //Нет чековой ленты 
+#define FR_ERROR_CODE_6C    0x6C  //Нет контрольной ленты
+#define FR_ERROR_CODE_6D    0x6D  //Не хватает денег по налогу
+#define FR_ERROR_CODE_6E    0x6E  //Переполнение денег по налогу
+#define FR_ERROR_CODE_6F    0x6F  //Переполнение по выплате в смене
+#define FR_ERROR_CODE_71    0x71  //Ошибка отрезчика
+#define FR_ERROR_CODE_72    0x72  //Команда не поддерживается в данном подрежиме
+#define FR_ERROR_CODE_73    0x73  //Команда не поддерживается в данном режиме
+#define FR_ERROR_CODE_74    0x74  //Ошибка ОЗУ
+#define FR_ERROR_CODE_75    0x75  //Ошибка питания
+#define FR_ERROR_CODE_77    0x77  //Ошибка принтера: нет сигнала с датчиков
+#define FR_ERROR_CODE_78    0x78  //Замена ПО
+#define FR_ERROR_CODE_7A    0x7A  //Поле не редактируется 
+#define FR_ERROR_CODE_7B    0x7B  //Ошибка оборудования
+#define FR_ERROR_CODE_7C    0x7C  //Не совпадает дата
+#define FR_ERROR_CODE_7D    0x7D  //Неверный формат даты
+#define FR_ERROR_CODE_7E    0x7E  //Неверное значение в поле длины
+#define FR_ERROR_CODE_7F    0x7F  //Переполнение диапазона итога чека
+#define FR_ERROR_CODE_84    0x84  //Переполнение наличности
+#define FR_ERROR_CODE_85    0x85  //Переполнение по продажам в смене
+#define FR_ERROR_CODE_86    0x86  //Переполнение по покупкам в смене
+#define FR_ERROR_CODE_87    0x87  //Переполнение по возвратам продаж в смене
+#define FR_ERROR_CODE_88    0x88  //Переполнение по возвратам покупок в смене
+#define FR_ERROR_CODE_89    0x89  //Переполнение по внесению в смене
+#define FR_ERROR_CODE_8A    0x8A  //Переполнение по надбавкам в чеке
+#define FR_ERROR_CODE_8B    0x8B  //Переполнение по скидкам в чеке
+#define FR_ERROR_CODE_8C    0x8C  //Отрицательный итог надбавки в чеке
+#define FR_ERROR_CODE_8D    0x8D  //Отрицательный итог скидки в чеке
+#define FR_ERROR_CODE_8E    0x8E  //Нулевой итог чека
 #define FR_ERROR_CODE_90    0x90  //Поле превышает размер, установленный в настройках
 #define FR_ERROR_CODE_91    0x91  //Выход за границу поля печати при данных настройках шрифта 
 #define FR_ERROR_CODE_92    0x92  //Наложение полей 
 #define FR_ERROR_CODE_93    0x93  //Восстановление ОЗУ прошло успешно 
 #define FR_ERROR_CODE_94    0x94  //Исчерпан лимит операций в чеке 
-#define FR_ERROR_CODE_a0    0xA0  //Ошибка связи с ЭКЛЗ 
-#define FR_ERROR_CODE_a1    0xA1  //ЭКЛЗ отсутствует 
-#define FR_ERROR_CODE_a2    0xA2  //ЭКЛЗ: Некорректный формат или параметр команды 
-#define FR_ERROR_CODE_a3    0xA3  //Некорректное состояние ЭКЛЗ 
-#define FR_ERROR_CODE_a4    0xA4  //Авария ЭКЛЗ 
-#define FR_ERROR_CODE_a5    0xA5  //Авария КС в составе ЭКЛЗ 
-#define FR_ERROR_CODE_a6    0xA6  //Исчерпан временной ресурс ЭКЛЗ 
-#define FR_ERROR_CODE_a7    0xA7  //ЭКЛЗ переполнена 
-#define FR_ERROR_CODE_a8    0xA8  //ЗКЛЗ: Неверные дата и время 
-#define FR_ERROR_CODE_a9    0xA9  //ЭКЛЗ: Нет запрошенных данных 
-#define FR_ERROR_CODE_aa    0xAA  //Переполнение ЭКЛЗ (отрицательный итог документа) 
-#define FR_ERROR_CODE_b0    0xB0  //ЭКЛЗ: Переполнение в параметре количество 
-#define FR_ERROR_CODE_b1    0xB1  //ЭКЛЗ: Переполнение в параметре сумма 
-#define FR_ERROR_CODE_b2    0xB2  //ЭКЛЗ: Уже активизирована 
-#define FR_ERROR_CODE_c0    0xC0  //Контроль даты и времени (подтвердите дату и время) 
-#define FR_ERROR_CODE_c1    0xC1  //ЭКЛЗ: суточный отч?т с гашением прервать нельзя 
-#define FR_ERROR_CODE_c2    0xC2  //Превышение напряжения в блоке питания 
-#define FR_ERROR_CODE_c3    0xC3  //Несовпадение итогов чека и ЭКЛЗ 
-#define FR_ERROR_CODE_c4    0xC4  //Несовпадение номеров смен 
-//#define FR_ERROR_CODE_c5    0xC5  //Буфер подкладного документа пуст 
-//#define FR_ERROR_CODE_c6    0xC6  //Подкладной документ отсутствует  //
-//#define FR_ERROR_CODE_c7    0xC7  //Поле не редактируется в данном режиме 
-//#define FR_ERROR_CODE_c8    0xC8  //Отсутствуют  //импульсы от таходатчика 
+#define FR_ERROR_CODE_C0    0xC0  //Контроль даты и времени (подтвердите дату и время) 
+#define FR_ERROR_CODE_C2    0xC2  //Превышение напряжения в блоке питания 
+#define FR_ERROR_CODE_C4    0xC4  //Несовпадение номеров смен 
+#define FR_ERROR_CODE_C7    0xC7  //Поле не редактируется в данном режиме 
+#define FR_ERROR_CODE_C8    0xC8  //Отсутствуют импульсы от таходатчика 
 
-#define FR_ERROR_NUMBER   143
+#define FR_ERROR_NUMBER   109
 
 // структура заводского номера и РНМ
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct{
   CPU_INT08U FactoryNumber[7];
   CPU_INT08U RNM[7];
 }TFiscFactoryNumber;
+#pragma pack(pop)
 
 // структура короткого состояния
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct{
   CPU_INT08U OperatorNumber; // номер оператора 1..30
   CPU_INT16U Flags; // флаги ФР
@@ -279,9 +250,10 @@ typedef struct{
   CPU_INT08U BillOperationNumber_H; // кол-во опреаций в чеке, ст. байт
   CPU_INT08U Reserve[3]; // резерв  
 }TFiscShortStatus;
+#pragma pack(pop)
 
 // структура полного состояния
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct{
 /*   
 Порядковый номер оператора (1 байт) 1…30 
@@ -338,9 +310,10 @@ typedef struct{
     CPU_INT08U inn[6];
 
 }TFiscFullStatus;
+#pragma pack(pop)
 
 // структура информации об устройстве
-#pragma pack(1)
+#pragma pack(push, 1)
 typedef struct{ 
   CPU_INT08U Type;                // Тип устройства (1 байт) 0…255 
   CPU_INT08U Subtype;             // Подтип устройства (1 байт) 0…255 
@@ -354,6 +327,7 @@ typedef struct{
                                   // байт, отводимое под название устройства, определяется в каждом конкретном 
                                   // случае самостоятельно разработчиками устройства (X байт) 
 }TFiscDevType;
+#pragma pack(pop)
 extern TFiscDevType FiscDevInfo;
 
 // функции
@@ -386,10 +360,18 @@ extern int FiscPrintContinue(CPU_INT32U pass, CPU_INT08U* err);
 extern int FiscOpenBill(CPU_INT32U pass, CPU_INT08U type, CPU_INT08U* err);
 extern int FiscMakeSell(CPU_INT32U pass, CPU_INT64U *count, CPU_INT64U *price, CPU_INT08U department, CPU_INT08U* tax, char* text, CPU_INT08U* err);
 extern int FiscCloseBill(CPU_INT32U pass, CPU_INT64U *cash, CPU_INT08U* tax, char* text, CPU_INT08U* err);
+extern int FiscCanselBill(CPU_INT32U pass, CPU_INT08U* err);
 
 extern int FiscPrintDayReportToBuf(CPU_INT32U admpass, CPU_INT08U* err);
 extern int FiscPrintDayReportsFromBuf(CPU_INT32U admpass, CPU_INT08U* err);
 
 extern int FiscPollExt(void);
+extern int FiscOpenDay(CPU_INT32U pass, CPU_INT08U* err);
+
+extern int FiscMakeSellV2(CPU_INT32U pass, CPU_INT64U *count, CPU_INT64U *price, CPU_INT08U department, CPU_INT08U* tax, CPU_INT08U subj, char* text, CPU_INT08U* err);
+extern int FiscCloseBillV2(CPU_INT32U pass, CPU_INT64U *cash, CPU_INT08U taxsys, char* text, CPU_INT08U* err);
+
+extern int FiscWriteTableData(CPU_INT32U pass, CPU_INT08U table, CPU_INT16U row, CPU_INT08U field, CPU_INT08U field_len, CPU_INT08U* data, CPU_INT08U* err);
+extern int FiscReadTableData(CPU_INT32U pass, CPU_INT08U table, CPU_INT16U row, CPU_INT08U field, CPU_INT08U field_len, CPU_INT08U* data, CPU_INT08U* err);
 
 #endif //#ifndef _FISCAL_H_

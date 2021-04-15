@@ -185,5 +185,9 @@ extern TDataDescStruct const IncasSendFlagDesc;
 extern TDataDescStruct const IncasMoneyDesc;
 extern TDataDescStruct const IncasTimeDesc;
 
+extern TDataDescStruct const TaxFormatDesc;
+extern TDataDescStruct const SubjSellDesc;
+extern TDataDescStruct const CommandV2Desc;
+extern TDataDescStruct const TaxSystemDesc;
 
 #endif //#ifndef _DATADESC_H_

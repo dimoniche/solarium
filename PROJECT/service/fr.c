@@ -75,19 +75,8 @@ int CheckFiscalStatus()
         memcpy(&flags, &FiscFullStatus.Flags, sizeof(CPU_INT16U));
 
         // КРИТИЧНЫЕ ФЛАГИ:
-        // ЭКЛЗ (0 – нет, 1 – есть) 
-        if (!(flags & (1L<<5)))
-        {
-            // нет ЭКЛЗ
-            SetFiscalErrorByCode(FR_ERROR_CODE_a1);
-            return -3;
-        }
-        else
-        {
-            ClrFiscalErrorByCode(FR_ERROR_CODE_a1);
-        }
-              
-        ClrFiscalErrorByCode(FR_ERROR_CODE_6b);
+
+        ClrFiscalErrorByCode(FR_ERROR_CODE_6B);
         // ПОДРЕЖИМ
         switch (FiscFullStatus.SubMode)
         {
@@ -95,17 +84,17 @@ int CheckFiscalStatus()
                 // 1.  Пассивное отсутствие бумаги – ФР не в фазе печати операции – не принимает от 
                 //     хоста команды, связанные с печатью на том документе, датчик которого сообщает об 
                 //     отсутствии бумаги. 
-                SetFiscalErrorByCode(FR_ERROR_CODE_6b);
+                SetFiscalErrorByCode(FR_ERROR_CODE_6B);
                 return -4;
             case 2: 
                 // 2.  Активное отсутствие бумаги – ФР в фазе печати операции – принимает только 
                 //     команды, не связанные с печатью. Переход из этого подрежима только в подрежим 3. 
-                SetFiscalErrorByCode(FR_ERROR_CODE_6b);
+                SetFiscalErrorByCode(FR_ERROR_CODE_6B);
                 return -5;
             case 3: 
                 // 3.  После активного отсутствия бумаги – ФР ждет команду продолжения печати. Кроме 
                 //     этого принимает команды, не связанные с печатью.
-                SetFiscalErrorByCode(FR_ERROR_CODE_6b);
+                SetFiscalErrorByCode(FR_ERROR_CODE_6B);
                 // допечатываем чек
                 FiscPrintContinue(DEFAULT_PASS, &err);
                 return -6;
@@ -146,7 +135,7 @@ int CheckFiscalStatus()
                         // закрываем смену в буфер 
                         FiscPrintDayReportToBuf(30, &err);
                         // как только переполнение буфера, печатаем из буфера
-                        if (err == FR_ERROR_CODE_4b)
+                        if (err == FR_ERROR_CODE_4B)
                         {
                             SetFiscalErrorByCode(err);
                             SaveEventRecord(0, JOURNAL_EVENT_PRINT_BUF, GetTimeSec());
@@ -177,22 +166,38 @@ int CheckFiscalStatus()
                     else if (autoclose==0)
                     {
                         // ошибка - должен прийти оператор и закрыть смену
-                        SetFiscalErrorByCode(FR_ERROR_CODE_4e);
-                        return -11;
+                        SetFiscalErrorByCode(FR_ERROR_CODE_4E);
+                        goto check_exit;
+                        //return -11;
                     }
                 }
                 goto check_exit;
             case 4: 
                 // 4.  Закрытая смена.
+                // открываем смену
+                if (FiscOpenDay(DEFAULT_PASS, &err) != FISC_OK)
+                {
+                    if (err)
+                    {
+                        SetFiscalErrorByCode(err);
+                    }
+                    else
+                    {
+                        ClearFiscalErrors();
+                        FiscalConnState = FISCAL_NOCONN;
+                        SetErrorFlag(ERROR_FR_CONN);
+                    }                
+                    return -12;
+                }
                 ClearFiscalErrors();
                 goto check_exit;
             case 5: 
                 // 5.  Блокировка по неправильному паролю налогового инспектора. 
-                SetFiscalErrorByCode(FR_ERROR_CODE_4f);
+                SetFiscalErrorByCode(FR_ERROR_CODE_4F);
                 goto check_exit;
             case 6: 
                 // 6.  Ожидание подтверждения ввода даты.
-                SetFiscalErrorByCode(FR_ERROR_CODE_c0);
+                SetFiscalErrorByCode(FR_ERROR_CODE_C0);
                 goto check_exit;
             case 8: 
                 // 8.  Открытый документ: 
@@ -201,6 +206,7 @@ int CheckFiscalStatus()
                 //  8.2. Возврат продажи. 
                 //  8.3. Возврат покупки. 
                 //  8.4. Нефискальный. 
+                /*
                 {
                     CPU_INT64U cash = 0;
                     CPU_INT08U tax[4] = {0,0,0,0};
@@ -208,9 +214,10 @@ int CheckFiscalStatus()
                     if (err)
                     {
                         SetFiscalErrorByCode(err);
-                        return -11;
+                        return -13;
                     }
                 }
+                */
                 goto check_exit;
             case 12: 
                 // идет печать Z-отчета
@@ -248,11 +255,11 @@ int ConnectFiscal(void)
         // поллим
         for (j = FISCAL_BAUDS_COUNT-1; j >= 0; j--)
         {
-            Uart0_Init(fiscal_bauds[j]);
             i = 10;
             do
             {
                 OSTimeDly(100);
+                Uart0_Init(fiscal_bauds[j]);
                 poll = FiscPollExt();
                 if ((poll == FISC_READY) || (poll == FISC_BUSY)) break;
             } while (--i);
@@ -323,10 +330,11 @@ int ConnectFiscalFast(void)
         // поллим
         for (j = FISCAL_BAUDS_COUNT-1; j >= 0; j--)
         {
-            Uart0_Init(fiscal_bauds[j]);
             i = 2;
             do
             {
+                OSTimeDly(100);
+                Uart0_Init(fiscal_bauds[j]);
                 poll = FiscPollExt();
                 if ((poll == FISC_READY) || (poll == FISC_BUSY)) break;
             } while (--i);
@@ -400,13 +408,14 @@ void InitFiscal(void)
 
 int IsFiscalConnected(void)
 {
+  int retval = 0;
+  CPU_INT32U enable;
   #if OS_CRITICAL_METHOD == 3
   OS_CPU_SR  cpu_sr = 0;
   #endif
+  GetData(&EnableFiscalDesc, &enable, 0, DATA_FLAG_SYSTEM_INDEX); 
   OS_ENTER_CRITICAL();
-  int retval;
-  if (FiscalConnState == FISCAL_CONN) retval=1;
-  else retval=0;
+  if ((enable) && (FiscalConnState == FISCAL_CONN)) retval=1;
   OS_EXIT_CRITICAL();
   return retval;
 }
@@ -473,154 +482,117 @@ void ClearFiscalErrors(void)
     }
 }
 
-  static const CPU_INT08U error_codes[FR_ERROR_NUMBER] = {
-  0x1,//Неисправен накопитель ФП 1, ФП 2 или часы 
-0x2,//Отсутствует ФП 1 
-0x3,//Отсутствует ФП 2 
-0x4,//Некорректные параметры в команде обращения к ФП 
-0x5,//Нет запрошенных данных 
-0x6,//ФП в режиме вывода данных 
-0x7,//Некорректные параметры в команде для данной реализации ФП 
-0x8,//Команда не поддерживается в данной реализации ФП 
-0x9,//Некорректная длина команды 
-0x0A,//Формат данных не BCD 
-0x0B,//Неисправна ячейка памяти ФП при записи итога 
-0x11,//Не введена лицензия 
-0x12,//Заводской номер уже введен 
-0x13,//Текущая дата меньше даты последней записи в ФП 
-0x14,//Область сменных итогов ФП переполнена 
-0x15,//Смена уже открыта 
-0x16,//Смена не открыта,// 
-0x17,//Номер первой смены больше номера последней смены,// 
-0x18,//Дата первой смены больше даты последней смены,// 
-0x19,//Нет данных в ФП,// 
-0x1A,//Область перерегистраций в ФП переполнена,// 
-0x1B,//Заводской номер не введен,// 
-0x1C,//В заданном диапазоне есть поврежденная запись,// 
-0x1D,//Повреждена последняя запись сменных итогов,// 
-0x1F,//Отсутствует память регистров,// 
-0x20,//Переполнение денежного регистра при добавлении,// 
-0x21,//Вычитаемая сумма больше содержимого денежного регистра,// 
-0x22,//Неверная дата,// 
-0x23,//Нет записи активизации,// 
-0x24,//Область активизаций переполнена,// 
-0x25,//Нет активизации с запрашиваемым номером,// 
-0x28,//В ФР более 2х сбойных записей,// 
-0x33,//Некорректные параметры в команде,// 
-0x35,//Некорректный параметр при данных настройках,// 
-0x36,//Некорректные параметры в команде для данной реализации ФР,// 
-0x37,//Команда не поддерживается в данной реализации ФР,// 
-0x38,//Ошибка в ПЗУ,//+ 
-0x39,//Внутренняя ошибка ПО ФР,// 
-0x3A,//Переполнение накопления по надбавкам в смене,// 
-0x3C,//ЭКЛЗ: неверный регистрационный номер,// 
-0x3E,//Переполнение накопления по секциям в смене,// 
-0x3F,//Переполнение накопления по скидкам в смене,// 
-0x40,//Переполнение диапазона скидок,// 
-0x41,//Переполнение диапазона оплаты наличными,// 
-0x42,//Переполнение диапазона оплаты типом 2,// 
-0x43,//Переполнение диапазона оплаты типом 3,// 
-0x44,//Переполнение диапазона оплаты типом 4 
-0x45,//Cумма всех типов оплаты меньше итога чека,// 
-0x46,//Не хватает наличности в кассе,// 
-0x47,//Переполнение накопления по налогам в смене,// 
-0x48,//Переполнение итога чека,// 
-0x4A,//Открыт чек - операция невозможна,// 
-0x4B,//Буфер чека переполнен,// 
-0x4C,//Переполнение накопления по обороту налогов в смене,// 
-0x4D,//Вносимая безналичной оплатой сумма больше суммы чека,// 
-0x4E,//Смена превысила 24 часа,// 
-0x4F,//Неверный пароль,// 
-0x50,//Идет печать предыдущей команды,// 
-0x51,//Переполнение накоплений наличными в смене,// 
-0x52,//Переполнение накоплений по типу оплаты 2 в смене,// 
-0x53,//Переполнение накоплений по типу оплаты 3 в смене,// 
-0x54,//Переполнение накоплений по типу оплаты 4 в смене,// 
-0x56,//Нет документа для повтора,// 
-0x57,//ЭКЛЗ: количество закрытых смен не совпадает с ФП,// 
-0x58,//Ожидание команды продолжения печати,// 
-0x59,//Документ открыт другим оператором,// 
-0x5B,//Переполнение диапазона надбавок,// 
-0x5C,//Понижено напряжение 24В
-0x5D,//Таблица не определена,// 
-0x5E,//Некорректная операция,// 
-0x5F,//Отрицательный итог чека,// 
-0x60,//Переполнение при умножении,// 
-0x61,//Переполнение диапазона цены,// 
-0x62,//Переполнение диапазона количества,// 
-0x63,//Переполнение диапазона отдела,// 
-0x64,//ФП отсутствует,//+ 
-0x65,//Не хватает денег в секции,// 
-0x66,//Переполнение денег в секции,// 
-0x67,//Ошибка связи с ФП,//+ 
-0x68,//Не хватает денег по обороту налогов,// 
-0x69,//Переполнение денег по обороту налогов,// 
-0x6A,//Ошибка питания в момент ответа по I
-0x6B,//Нет чековой ленты,// 
-0x6C,//Нет контрольной ленты,// 
-0x6D,//Не хватает денег по налогу,// 
-0x6E,//Переполнение денег по налогу,// 
-0x6F,//Переполнение по выплате в смене,// 
-0x70,//Переполнение ФП,// 
-0x71,//Ошибка отрезчика,//+ 
-0x72,//Команда не поддерживается в данном подрежиме,// 
-0x73,//Команда не поддерживается в данном режиме,// 
-0x74,//Ошибка ОЗУ,// 
-0x75,//Ошибка питания,//+ 
-0x76,//Ошибка принтера: нет импульсов с тахогенератора,//+ 
-0x77,//Ошибка принтера: нет сигнала с датчиков,//+ 
-0x78,//Замена ПО,// 
-0x79,//Замена ФП,// 
-0x7A,//Поле не редактируется 
-0x7B,//Ошибка оборудования,// 
-0x7C,//Не совпадает дата,// 
-0x7D,//Неверный формат даты,// 
-0x7E,//Неверное значение в поле длины,// 
-0x7F,//Переполнение диапазона итога чека,// 
-0x80,//Ошибка связи с ФП,//+ 
-0x81,//Ошибка связи с ФП,//+ 
-0x82,//Ошибка связи с ФП,//+ 
-0x83,//Ошибка связи с ФП,//+ 
-0x84,//Переполнение наличности,// 
-0x85,//Переполнение по продажам в смене,// 
-0x86,//Переполнение по покупкам в смене,// 
-0x87,//Переполнение по возвратам продаж в смене,// 
-0x88,//Переполнение по возвратам покупок в смене,// 
-0x89,//Переполнение по внесению в смене,// 
-0x8A,//Переполнение по надбавкам в чеке,// 
-0x8B,//Переполнение по скидкам в чеке,// 
-0x8C,//Отрицательный итог надбавки в чеке,// 
-0x8D,//Отрицательный итог скидки в чеке,// 
-0x8E,//Нулевой итог чека,// 
-0x8F,//Касса не фискализирована,//,//
-0x90,//Поле превышает размер, установленный в настройках
-0x91,//Выход за границу поля печати при данных настройках шрифта 
-0x92,//Наложение полей 
-0x93,//Восстановление ОЗУ прошло успешно 
-0x94,//Исчерпан лимит операций в чеке 
-0xA0,//Ошибка связи с ЭКЛЗ 
-0xA1,//ЭКЛЗ отсутствует 
-0xA2,//ЭКЛЗ: Некорректный формат или параметр команды 
-0xA3,//Некорректное состояние ЭКЛЗ 
-0xA4,//Авария ЭКЛЗ 
-0xA5,//Авария КС в составе ЭКЛЗ 
-0xA6,//Исчерпан временной ресурс ЭКЛЗ 
-0xA7,//ЭКЛЗ переполнена 
-0xA8,//ЗКЛЗ: Неверные дата и время 
-0xA9,//ЭКЛЗ: Нет запрошенных данных 
-0xAA,//Переполнение ЭКЛЗ (отрицательный итог документа) 
-0xB0,//ЭКЛЗ: Переполнение в параметре количество 
-0xB1,//ЭКЛЗ: Переполнение в параметре сумма 
-0xB2,//ЭКЛЗ: Уже активизирована 
-0xC0,//Контроль даты и времени (подтвердите дату и время) 
-0xC1,//ЭКЛЗ: суточный отч?т с гашением прервать нельзя 
-0xC2,//Превышение напряжения в блоке питания 
-0xC3,//Несовпадение итогов чека и ЭКЛЗ 
-0xC4,//Несовпадение номеров смен 
-//0xC5,//Буфер подкладного документа пуст 
-//0xC6,//Подкладной документ отсутствует,//
-//0xC7,//Поле не редактируется в данном режиме 
-//0xC8,//Отсутствуют,//импульсы от таходатчика 
+static const CPU_INT08U fr_error_codes[FR_ERROR_NUMBER] = 
+{
+    FR_ERROR_CODE_1,
+    FR_ERROR_CODE_2,
+    FR_ERROR_CODE_3,
+    FR_ERROR_CODE_4,
+    FR_ERROR_CODE_5,
+    FR_ERROR_CODE_6,
+    FR_ERROR_CODE_7,
+    FR_ERROR_CODE_8,
+    FR_ERROR_CODE_9,
+    FR_ERROR_CODE_10,
+    FR_ERROR_CODE_11,
+    FR_ERROR_CODE_12,
+    FR_ERROR_CODE_14,
+    FR_ERROR_CODE_15,
+    FR_ERROR_CODE_16,
+    FR_ERROR_CODE_17,
+    FR_ERROR_CODE_20,
+    FR_ERROR_CODE_2F,
+    FR_ERROR_CODE_30,
+    FR_ERROR_CODE_33,
+    FR_ERROR_CODE_34,
+    FR_ERROR_CODE_35,
+    FR_ERROR_CODE_36,
+    FR_ERROR_CODE_37,
+    FR_ERROR_CODE_38,
+    FR_ERROR_CODE_39,
+    FR_ERROR_CODE_3a,
+    FR_ERROR_CODE_3c,
+    FR_ERROR_CODE_3D,
+    FR_ERROR_CODE_3E,
+    FR_ERROR_CODE_3F,
+    FR_ERROR_CODE_40,
+    FR_ERROR_CODE_41,
+    FR_ERROR_CODE_42,
+    FR_ERROR_CODE_43,
+    FR_ERROR_CODE_44,
+    FR_ERROR_CODE_45,
+    FR_ERROR_CODE_46,
+    FR_ERROR_CODE_47,
+    FR_ERROR_CODE_48,
+    FR_ERROR_CODE_49,
+    FR_ERROR_CODE_4A,
+    FR_ERROR_CODE_4B,
+    FR_ERROR_CODE_4C,
+    FR_ERROR_CODE_4D,
+    FR_ERROR_CODE_4E,
+    FR_ERROR_CODE_4F,
+    FR_ERROR_CODE_50,
+    FR_ERROR_CODE_51,
+    FR_ERROR_CODE_52,
+    FR_ERROR_CODE_53,
+    FR_ERROR_CODE_54,
+    FR_ERROR_CODE_55,
+    FR_ERROR_CODE_56,
+    FR_ERROR_CODE_58,
+    FR_ERROR_CODE_59,
+    FR_ERROR_CODE_5B,
+    FR_ERROR_CODE_5C,
+    FR_ERROR_CODE_5D,
+    FR_ERROR_CODE_5E,
+    FR_ERROR_CODE_5F,
+    FR_ERROR_CODE_60,
+    FR_ERROR_CODE_61,
+    FR_ERROR_CODE_62,
+    FR_ERROR_CODE_63,
+    FR_ERROR_CODE_65,
+    FR_ERROR_CODE_66,
+    FR_ERROR_CODE_68,
+    FR_ERROR_CODE_69,
+    FR_ERROR_CODE_6A,
+    FR_ERROR_CODE_6B,
+    FR_ERROR_CODE_6C,
+    FR_ERROR_CODE_6D,
+    FR_ERROR_CODE_6E,
+    FR_ERROR_CODE_6F,
+    FR_ERROR_CODE_71,
+    FR_ERROR_CODE_72,
+    FR_ERROR_CODE_73,
+    FR_ERROR_CODE_74,
+    FR_ERROR_CODE_75,
+    FR_ERROR_CODE_77,
+    FR_ERROR_CODE_78,
+    FR_ERROR_CODE_7A,
+    FR_ERROR_CODE_7B,
+    FR_ERROR_CODE_7C,
+    FR_ERROR_CODE_7D,
+    FR_ERROR_CODE_7E,
+    FR_ERROR_CODE_7F,
+    FR_ERROR_CODE_84,
+    FR_ERROR_CODE_85,
+    FR_ERROR_CODE_86,
+    FR_ERROR_CODE_87,
+    FR_ERROR_CODE_88,
+    FR_ERROR_CODE_89,
+    FR_ERROR_CODE_8A,
+    FR_ERROR_CODE_8B,
+    FR_ERROR_CODE_8C,
+    FR_ERROR_CODE_8D,
+    FR_ERROR_CODE_8E,
+    FR_ERROR_CODE_90,
+    FR_ERROR_CODE_91,
+    FR_ERROR_CODE_92,
+    FR_ERROR_CODE_93,
+    FR_ERROR_CODE_94,
+    FR_ERROR_CODE_C0,
+    FR_ERROR_CODE_C2,
+    FR_ERROR_CODE_C4,
+    FR_ERROR_CODE_C7,
+    FR_ERROR_CODE_C8
   };
 
 // установка глобального флага ошибки ФР по ошибки коду драйвера
@@ -629,7 +601,7 @@ void SetFiscalErrorByCode(CPU_INT08U err)
   if (!err) return;
   for (unsigned char i=0; i<FR_ERROR_NUMBER; i++)
     {
-      if (error_codes[i] == err) 
+      if (fr_error_codes[i] == err) 
         {
           SetErrorFlag(ERROR_FR+i);
           break;
@@ -642,7 +614,7 @@ void ClrFiscalErrorByCode(CPU_INT08U err)
 {
   for (unsigned char i=0; i<FR_ERROR_NUMBER; i++)
     {
-      if (error_codes[i] == err) 
+      if (fr_error_codes[i] == err) 
         {
           ClrErrorFlag(ERROR_FR+i);
           break;
@@ -661,6 +633,16 @@ int PrintFiscalBill(CPU_INT32U money, CPU_INT32U time)
   CPU_INT08U tax[4] = {0,0,0,0};
   CPU_INT32U format = 0;
   CPU_INT08U repeat;
+  CPU_INT32U tax1;
+  CPU_INT08U subj;
+  CPU_INT32U subj32;
+  CPU_INT32U ext;
+  
+  GetData(&TaxFormatDesc, &tax1, 0, DATA_FLAG_SYSTEM_INDEX);
+  tax[0] = (CPU_INT08U)tax1;
+  GetData(&SubjSellDesc, &subj32, 0, DATA_FLAG_SYSTEM_INDEX);
+  subj = (CPU_INT08U)subj32;
+  GetData(&CommandV2Desc, &ext, 0, DATA_FLAG_SYSTEM_INDEX);
   
   FPend();
   
@@ -718,8 +700,14 @@ repeat_open:
   
 repeat_sell1:
 
+      if (ext)
+      {
+        count *= 1000;
+      }
+        
       // печатаем количество минут
-      if (FiscMakeSell(DEFAULT_PASS, &count, &price, 0, &tax[0], "Услуги солярия, мин.", &err) != FISC_OK)
+      if (((ext == 0) && (FiscMakeSell(DEFAULT_PASS, &count, &price, 0, &tax[0], "Услуги солярия, мин.", &err) != FISC_OK))
+            || ((ext) && (FiscMakeSellV2(DEFAULT_PASS, &count, &price, 0, &tax[0], subj, "Услуги солярия, мин.", &err) != FISC_OK)))
         {
           if (err) 
           {
@@ -763,7 +751,10 @@ repeat_sell2:
       // печатаем только общую сумму
       count = 1000;
       price = money*100;
-      if (FiscMakeSell(DEFAULT_PASS, &count, &price, 0, &tax[0], "Услуги солярия", &err) != FISC_OK)
+      if (ext) count *= 1000;
+      
+      if (((ext == 0) && (FiscMakeSell(DEFAULT_PASS, &count, &price, 0, &tax[0], "Услуги солярия", &err) != FISC_OK))
+          || ((ext) && (FiscMakeSellV2(DEFAULT_PASS, &count, &price, 0, &tax[0], subj, "Услуги солярия", &err) != FISC_OK)))
         {
           if (err)
           {
@@ -795,15 +786,21 @@ repeat_sell2:
             return -400;
         }
       }
-
-
     }
 
     repeat = 0;
   
 repeat_close:
 
-  if (FiscCloseBill(DEFAULT_PASS, &cash, &tax[0], "Спасибо за покупку!!!", &err) != FISC_OK)
+    if (ext)
+    {
+        GetData(&TaxSystemDesc, &tax1, 0, DATA_FLAG_SYSTEM_INDEX);
+        tax[0] = (CPU_INT08U)tax1;
+    }
+    
+    if (((ext == 0) && (FiscCloseBill(DEFAULT_PASS, &cash, &tax[0], "Спасибо за покупку!!!", &err) != FISC_OK))
+        || ((ext) && (FiscCloseBillV2(DEFAULT_PASS, &cash, tax[0], "Спасибо за покупку!!!!", &err) != FISC_OK))
+       )
     {
       if (err)
       {
@@ -841,28 +838,11 @@ repeat_close:
   return 0;  
 }
 
-/*
-// печать чека на ФР с повторами, на случай закрытия смены
-int PrintFiscalBillRepeated(CPU_INT32U money, CPU_INT32U time)
-{
-  int res = PrintFiscalBill(money, time);
-  int i=4;
-  
-  while ((res != 0) && (i>0))
-    {
-      OSTimeDly(5000);
-      res = PrintFiscalBill(money, time);
-      i--;
-    }
-  return res;
-}
-*/
-
 int TstFiscalErrorByCode(unsigned char code)
 {
   for (unsigned char i=0; i<FR_ERROR_NUMBER; i++)
     {
-      if (error_codes[i] == code) 
+      if (fr_error_codes[i] == code) 
         {
           return TstErrorFlag(ERROR_FR+i);
         }
@@ -874,7 +854,7 @@ CPU_INT08U GetFiscalErrorNumberByCode(unsigned char code)
 {
   for (unsigned char i=0; i<FR_ERROR_NUMBER; i++)
     {
-      if (error_codes[i] == code) 
+      if (fr_error_codes[i] == code) 
         {
           return i;
         }
@@ -882,79 +862,115 @@ CPU_INT08U GetFiscalErrorNumberByCode(unsigned char code)
   return 0;
 }
 
-#define FR_CRITICAL_ERROR_NUM   70
+#define FR_CRITICAL_ERROR_NUM   105
 
-const CPU_INT08U  FiscalCriticalErrorsTable[FR_CRITICAL_ERROR_NUM] = {
-         FR_ERROR_CODE_1,
-         FR_ERROR_CODE_2,
-         FR_ERROR_CODE_6,
-         FR_ERROR_CODE_a,
-         FR_ERROR_CODE_b,
-         FR_ERROR_CODE_11,
-         FR_ERROR_CODE_13,
-         FR_ERROR_CODE_14,
-         FR_ERROR_CODE_17,
-         FR_ERROR_CODE_18,
-         FR_ERROR_CODE_1a,
-         FR_ERROR_CODE_1c,
-         FR_ERROR_CODE_1d,
-         FR_ERROR_CODE_1f,
-         FR_ERROR_CODE_23,
-         FR_ERROR_CODE_24,
-         FR_ERROR_CODE_38,
-         FR_ERROR_CODE_39,
-         FR_ERROR_CODE_3a,
-         FR_ERROR_CODE_3c,
-         FR_ERROR_CODE_3e,
-         FR_ERROR_CODE_3f,
-         FR_ERROR_CODE_40,
-         FR_ERROR_CODE_41,
-         FR_ERROR_CODE_42,
-         FR_ERROR_CODE_43,
-         FR_ERROR_CODE_44,
-         FR_ERROR_CODE_47,
-         FR_ERROR_CODE_48,
-         FR_ERROR_CODE_4c,
-         FR_ERROR_CODE_4e,
-         FR_ERROR_CODE_51,
-         FR_ERROR_CODE_52,
-         FR_ERROR_CODE_53,
-         FR_ERROR_CODE_54,
-         FR_ERROR_CODE_57,
-         FR_ERROR_CODE_5b,
-         FR_ERROR_CODE_64,
-         FR_ERROR_CODE_67,
-         FR_ERROR_CODE_6a,
-         FR_ERROR_CODE_6b,
-         FR_ERROR_CODE_70,
-         FR_ERROR_CODE_71,
-         FR_ERROR_CODE_74,
-         FR_ERROR_CODE_75,
-         FR_ERROR_CODE_76,
-         FR_ERROR_CODE_77,
-         FR_ERROR_CODE_78,
-         FR_ERROR_CODE_79,
-         FR_ERROR_CODE_7b,
-         FR_ERROR_CODE_80,
-         FR_ERROR_CODE_81,
-         FR_ERROR_CODE_82,
-         FR_ERROR_CODE_83,
-         FR_ERROR_CODE_87,
-         FR_ERROR_CODE_88,
-         FR_ERROR_CODE_89,
-         FR_ERROR_CODE_8a,
-         FR_ERROR_CODE_8b,
-         FR_ERROR_CODE_a0,
-         FR_ERROR_CODE_a1,
-         FR_ERROR_CODE_a3,
-         FR_ERROR_CODE_a4,
-         FR_ERROR_CODE_a5,
-         FR_ERROR_CODE_a6,
-         FR_ERROR_CODE_a7,
-         FR_ERROR_CODE_a8,
-         FR_ERROR_CODE_a9,
-         FR_ERROR_CODE_c2,
-         FR_ERROR_CODE_c4
+const CPU_INT08U  FiscalCriticalErrorsTable[FR_CRITICAL_ERROR_NUM] = 
+{
+    FR_ERROR_CODE_1,
+    FR_ERROR_CODE_2,
+    FR_ERROR_CODE_3,
+    FR_ERROR_CODE_4,
+    FR_ERROR_CODE_5,
+    FR_ERROR_CODE_6,
+    FR_ERROR_CODE_7,
+    FR_ERROR_CODE_8,
+    FR_ERROR_CODE_9,
+    FR_ERROR_CODE_10,
+    FR_ERROR_CODE_11,
+    FR_ERROR_CODE_12,
+    FR_ERROR_CODE_14,
+    FR_ERROR_CODE_15,
+    FR_ERROR_CODE_16,
+    FR_ERROR_CODE_17,
+    FR_ERROR_CODE_30,
+    FR_ERROR_CODE_33,
+    FR_ERROR_CODE_34,
+    FR_ERROR_CODE_35,
+    FR_ERROR_CODE_36,
+    FR_ERROR_CODE_37,
+    FR_ERROR_CODE_38,
+    FR_ERROR_CODE_39,
+    FR_ERROR_CODE_3a,
+    FR_ERROR_CODE_3c,
+    FR_ERROR_CODE_3D,
+    FR_ERROR_CODE_3E,
+    FR_ERROR_CODE_3F,
+    FR_ERROR_CODE_40,
+    FR_ERROR_CODE_41,
+    FR_ERROR_CODE_42,
+    FR_ERROR_CODE_43,
+    FR_ERROR_CODE_44,
+    FR_ERROR_CODE_45,
+    FR_ERROR_CODE_46,
+    FR_ERROR_CODE_47,
+    FR_ERROR_CODE_48,
+    FR_ERROR_CODE_49,
+    FR_ERROR_CODE_4A,
+    FR_ERROR_CODE_4B,
+    FR_ERROR_CODE_4C,
+    FR_ERROR_CODE_4D,
+    FR_ERROR_CODE_4E,
+    FR_ERROR_CODE_4F,
+    FR_ERROR_CODE_50,
+    FR_ERROR_CODE_51,
+    FR_ERROR_CODE_52,
+    FR_ERROR_CODE_53,
+    FR_ERROR_CODE_54,
+    FR_ERROR_CODE_55,
+    FR_ERROR_CODE_56,
+    FR_ERROR_CODE_58,
+    FR_ERROR_CODE_59,
+    FR_ERROR_CODE_5B,
+    FR_ERROR_CODE_5C,
+    FR_ERROR_CODE_5D,
+    FR_ERROR_CODE_5E,
+    FR_ERROR_CODE_5F,
+    FR_ERROR_CODE_60,
+    FR_ERROR_CODE_61,
+    FR_ERROR_CODE_62,
+    FR_ERROR_CODE_63,
+    FR_ERROR_CODE_65,
+    FR_ERROR_CODE_66,
+    FR_ERROR_CODE_68,
+    FR_ERROR_CODE_69,
+    FR_ERROR_CODE_6A,
+    FR_ERROR_CODE_6B,
+    FR_ERROR_CODE_6C,
+    FR_ERROR_CODE_6D,
+    FR_ERROR_CODE_6E,
+    FR_ERROR_CODE_6F,
+    FR_ERROR_CODE_72,
+    FR_ERROR_CODE_73,
+    FR_ERROR_CODE_74,
+    FR_ERROR_CODE_75,
+    FR_ERROR_CODE_77,
+    FR_ERROR_CODE_78,
+    FR_ERROR_CODE_7A,
+    FR_ERROR_CODE_7B,
+    FR_ERROR_CODE_7C,
+    FR_ERROR_CODE_7D,
+    FR_ERROR_CODE_7E,
+    FR_ERROR_CODE_7F,
+    FR_ERROR_CODE_84,
+    FR_ERROR_CODE_85,
+    FR_ERROR_CODE_86,
+    FR_ERROR_CODE_87,
+    FR_ERROR_CODE_88,
+    FR_ERROR_CODE_89,
+    FR_ERROR_CODE_8A,
+    FR_ERROR_CODE_8B,
+    FR_ERROR_CODE_8C,
+    FR_ERROR_CODE_8D,
+    FR_ERROR_CODE_8E,
+    FR_ERROR_CODE_90,
+    FR_ERROR_CODE_91,
+    FR_ERROR_CODE_92,
+    FR_ERROR_CODE_94,
+    FR_ERROR_CODE_C0,
+    FR_ERROR_CODE_C2,
+    FR_ERROR_CODE_C4,
+    FR_ERROR_CODE_C7,
+    FR_ERROR_CODE_C8
 };
 
 // проверка критичеких флагов ФР
@@ -980,3 +996,27 @@ int GetFirstCriticalFiscalError(CPU_INT08U *err)
     }
   return res;
 }
+
+// отмена чека
+int CanselFiscalBill(void)
+{
+    CPU_INT08U err;
+    
+    FPend();
+    
+    if (CheckFiscalStatus() < 0)
+    {
+        FPost();
+        return -100;
+    }
+
+    if (FiscCanselBill(DEFAULT_PASS, &err) != FISC_OK)
+    {
+        FPost();
+        return -101;
+    }
+      
+    FPost();
+    return 0;
+}
+

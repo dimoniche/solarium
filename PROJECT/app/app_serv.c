@@ -453,7 +453,7 @@ void UserAppTask(void *p_arg)
                         if (err) {SetFiscalErrorByCode(err);}
                         SaveEventRecord(0, JOURNAL_EVENT_PRINT_Z, GetTimeSec());
                         GoToPreviousMenu();
-                        ClrFiscalErrorByCode(FR_ERROR_CODE_4e);
+                        ClrFiscalErrorByCode(FR_ERROR_CODE_4E);
                       }
                    }
                   else if (GetCurrentMenu() == bufReportMenuPanel)

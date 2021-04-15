@@ -1175,46 +1175,35 @@ CPU_INT08U const *ErrorNumberList0[ERRORS_NUM] = {"нет",
                                        "ошибка", 
                                        "ошибка",
 
-                                       "ФР:01h-неисправен",
-                                       "ФР:02h-отсутствует",
-                                       "ФР:03h-отсутствует",
-                                       "ФР:04h-некорр.п-ры",
-                                       "ФР:05h-нет",  
-                                       "ФР:06h-ФП в режиме", 
-                                       "ФР:07h-некорр.п-ры", 
-                                       "ФР:08h-команда", 
-                                       "ФР:09h-некорр.", 
-                                       "ФР:0Ah-формат данных", 
-                                       "ФР:0Bh-неиспр.ячейка", 
-                                       "ФР:11h-не введена", 
-                                       "ФР:12h-заводской",
-                                       "ФР:13h-текущая дата", 
-                                       "ФР:14h-ФП", 
-                                       "ФР:15h-Смена", 
-                                       "ФР:16h-Смена",
-                                       "ФР:17h-Ошибка номера", 
-                                      "ФР:18h-Ошибка даты", 
-                                      "ФР:19h-Нет данных", 
-                                      "ФР:1Ah-Оошибка ФП", 
-                                      "ФР:1Bh-Заводской",  
-                                      "ФР:1Ch-Есть", 
-                                      "ФР:1Dh-Повреждена", 
-                                      "ФР:1Fh-Отсутствует",
-                                      "ФР:20h-Переполнение", 
-                                      "ФР:21h-Ошибка суммы", 
-                                      "ФР:22h-Неверная дата", 
-                                      "ФР:23h-Нет записи", 
-                                      "ФР:24h-Область", 
-                                      "ФР:25h-Нет", 
-                                      "ФР:28h-В ФП более",
+                                       "ФР:01h-Неизвестная",
+                                       "ФР:02h-Неверное",
+                                       "ФР:03h-Ошибка ФН",
+                                       "ФР:04h-Ошибка КС",
+                                       "ФР:05h-Закончен срок",  
+                                       "ФР:06h-Архив ФН", 
+                                       "ФР:07h-Неверные дата", 
+                                       "ФР:08h-Нет ", 
+                                       "ФР:09h-Некорр.", 
+                                       "ФР:10h-Превышение", 
+                                       "ФР:11h-Нет", 
+                                       "ФР:12h-Исчерпан",
+                                       "ФР:14h-Исчерпан", 
+                                       "ФР:15h-Исчерпан", 
+                                       "ФР:16h-Смена более",
+                                       "ФР:17h-Неверная", 
+                                      "ФР:20h-Сообщение", 
+                                      "ФР:2Fh-Таймаут ",
+                                      "ФР:30h-ФН ", 
                                       "ФР:33h-Некорректные", 
+                                      "ФР:34h-Нет", 
                                       "ФР:35h-Некорректный", 
                                       "ФР:36h-Некорректные", 
                                       "ФР:37h-Команда", 
-                                      "ФР:38h-Ошибка в ПЗУ", 
+                                      "ФР:38h-Ошибка", 
                                       "ФР:39h-Внутренняя", 
                                       "ФР:3Ah-Переполнение", 
-                                      "ФР:3Ch-ЭКЛЗ:", 
+                                      "ФР:3Ch-Смена", 
+                                      "ФР:3Dh-Смена", 
                                       "ФР:3Eh-Переполнение", 
                                       "ФР:3Fh-Переполнение", 
                                       "ФР:40h-Переполнение", 
@@ -1226,6 +1215,7 @@ CPU_INT08U const *ErrorNumberList0[ERRORS_NUM] = {"нет",
                                       "ФР:46h-Не хватает", 
                                       "ФР:47h-Переполнение", 
                                       "ФР:48h-Переполнение", 
+                                      "ФР:49h-Опер.невозм.", 
                                       "ФР:4Ah-Открыт чек", 
                                       "ФР:4Bh-Буфер чека", 
                                       "ФР:4Ch-Переполнение", 
@@ -1237,8 +1227,8 @@ CPU_INT08U const *ErrorNumberList0[ERRORS_NUM] = {"нет",
                                       "ФР:52h-Переполнение", 
                                       "ФР:53h-Переполнение", 
                                       "ФР:54h-Переполнение", 
+                                      "ФР:55h-Чек закрыт", 
                                       "ФР:56h-Нет док.", 
-                                      "ФР:57h-ЭКЛЗ:", 
                                       "ФР:58h-Ожидание", 
                                       "ФР:59h-Документ", 
                                       "ФР:5Bh-Переполнение", 
@@ -1250,10 +1240,8 @@ CPU_INT08U const *ErrorNumberList0[ERRORS_NUM] = {"нет",
                                       "ФР:61h-Переполнение",
                                       "ФР:62h-Переполнение",
                                       "ФР:63h-Переполнение",
-                                      "ФР:64h-ФП отсутствует",
                                       "ФР:65h-Не хватает",
                                       "ФР:66h-Переполнение",
-                                      "ФР:67h-Ошибка связи",
                                       "ФР:68h-Не хватает",
                                       "ФР:69h-Переполнение",
                                       "ФР:6Ah-Ошибка",
@@ -1262,26 +1250,19 @@ CPU_INT08U const *ErrorNumberList0[ERRORS_NUM] = {"нет",
                                       "ФР:6Dh-Не хватает",
                                       "ФР:6Eh-Переполнение",
                                       "ФР:6Fh-Переполнение",
-                                      "ФР:70h-Переполнение", 
                                       "ФР:71h-Ошибка", 
                                       "ФР:72h-Команда не", 
                                       "ФР:73h-Команда не", 
                                       "ФР:74h-Ошибка ОЗУ", 
                                       "ФР:75h-Ошибка", 
-                                      "ФР:76h-Принтер:", 
                                       "ФР:77h-Принтер:", 
                                       "ФР:78h-Замена ПО", 
-                                      "ФР:79h-Замена ФП", 
                                       "ФП:7Ah-Поле не", 
                                       "ФР:7Bh-Ошибка", 
                                       "ФР:7Ch-Не совпадает", 
                                       "ФР:7Dh-Неверный", 
                                       "ФР:7Eh-Неверное", 
                                       "ФР:7Fh-Переполнение", 
-                                      "ФР:80h-Ошибка", 
-                                      "ФР:81h-Ошибка", 
-                                      "ФР:82h-Ошибка", 
-                                      "ФР:83h-Ошибка", 
                                       "ФР:84h-Переполнение", 
                                       "ФР:85h-Переполнение", 
                                       "ФР:86h-Переполнение", 
@@ -1293,36 +1274,16 @@ CPU_INT08U const *ErrorNumberList0[ERRORS_NUM] = {"нет",
                                       "ФР:8Ch-Отриц.", 
                                       "ФР:8Dh-Отрицательный", 
                                       "ФР:8Eh-Нулевой итог", 
-                                      "ФР:8Fh-Касса не", 
                                       "ФР:90h-Поле прев.", 
                                       "ФР:91h-Выход за", 
                                       "ФР:92h-Наложение", 
                                       "ФР:93h-Восстановление", 
                                       "ФР:94h-Исчерпан", 
-                                      "ФР:A0h-Ошибка связи", 
-                                      "ФР:A1h-ЭКЛЗ", 
-                                      "ФР:A2h-ЭКЛЗ: ", 
-                                      "ФР:A3h-Некорректное", 
-                                      "ФР:A4h-Авария ЭКЛЗ", 
-                                      "ФР:A5h-Авария КС", 
-                                      "ФР:A6h-Исчерпан", 
-                                      "ФР:A7h-ЭКЛЗ", 
-                                      "ФР:A8h-ЗКЛЗ:", 
-                                      "ФР:A9h-ЭКЛЗ:", 
-                                      "ФР:AAh-Переполнение", 
-                                      "ФР:B0h-ЭКЛЗ:", 
-                                      "ФР:B1h-ЭКЛЗ:", 
-                                      "ФР:B2h-ЭКЛЗ:", 
                                       "ФР:C0h-Контроль", 
-                                      "ФР:C1h-ЭКЛЗ:", 
                                       "ФР:C2h-Превышение", 
-                                      "ФР:C3h-Несовпадение", 
                                       "ФР:C4h-Несовпадение", 
-                                      //"ФР:С5h-Буфер",
-                                      //"ФР:C6h-Подкладной", 
-                                      //"ФР:C7h-Поле не", 
-                                      //"ФР:С8h-Отсутствуют", 
-
+                                      "ФР:C7h-Поле не", 
+                                      "ФР:С8h-Отсутствуют"
 };
 
 TDataDescStruct const JournalErrorNumberDesc0 = {
@@ -1369,47 +1330,37 @@ CPU_INT08U const *ErrorNumberList1[ERRORS_NUM] = {"нет",
                                        "маг.датчика",
                                        "датчика",
                                        "модема", 
-                                       "связи с ФР",                                        
-                                       "ФП1,ФП2 или часы",
-                                       "ФП 1",                  
-                                       "ФП 2",
-                                       "в команде к ФП",                                       
+                                       "связи с ФР",
+                                       
+                                       "команда",  // ФР:01h
+                                       "состояние ФН",                  
+                                       "",
+                                       "",                                       
+                                       "эксплуатации ФН",
+                                       "переполнен",
+                                       "и/или время",
                                        "запрошенных данных",
-                                       "вывода данных",
-                                       "в команде ФП",
-                                       "не подд.ФП",
-                                       "длина команды ",
-                                       "не BCD",
-                                       "памяти ФП",
-                                       "лицензия",
-                                       "номер уже введен",
-                                       "меньше даты в ФП",
-                                        "переполнена",
-                                        "уже открыта",
-                                        "не открыта",
-                                        "смены",
-                                        "смены",
-                                        "в ФП",
-                                        "",
-                                        "номер не введен",
-                                        "поврежд. запись",
-                                        "последняя запись",
-                                        "память регистров",
-                                        "денежного регистра",
-                                        "",
-                                        "",
-                                        "активизации",
-                                        "акт.переполнена",
-                                        "активизации",
-                                        "2х сбойных записей",
-                                        "параметры в команде",
+                                       "знач.пар.к-ды",
+                                       "разм.TLV данных",
+                                       "трансп.соед.",
+                                       "ресурс КС",
+                                       "ресурс хранения",
+                                       "ресурс ожидания",
+                                       "24 часов",
+                                       "разница во времени",
+                                        "от ОФД не принято",
+                                        "обмена с ФН",
+                                        "не отвечает",
+                                        "параметры в к-де",
+                                        "данных",
                                         "параметр",
-                                        "параметры",
-                                        "не поддерж.ФР",
-                                        "",
-                                        "ошибка ПО ФР",
-                                        "накопления в смене",
-                                        "неверный рег.номер",
+                                        "параметры",    // 36h
+                                        "не поддерживается",
+                                        "в ПЗУ",
+                                        "ошибка ПО ККТ",
+                                        "нак.по надб.",
+                                        "откр.-операция невозм.",
+                                        "закр.-операция невозм.",       //3Dh
                                         "накоп.по секциям",
                                         "накоп.по скидкам",
                                         "диапазона скидок",
@@ -1421,6 +1372,7 @@ CPU_INT08U const *ErrorNumberList1[ERRORS_NUM] = {"нет",
                                         "наличности в кассе",
                                         "накопления по налогам",
                                         "итога чека",
+                                        "в откр.чеке",
                                         "операция невозможна",
                                         "переполнен",
                                         "накоп.по налогам",
@@ -1432,8 +1384,8 @@ CPU_INT08U const *ErrorNumberList1[ERRORS_NUM] = {"нет",
                                         "накоплений 2 в смене",
                                         "накоплений 3 в смене",
                                         "накоплений 4 в смене",
+                                        "операция невозм.",
                                         "для повтора",
-                                        "ошибка кол-ва смен",
                                         "команды продолжения",
                                         "открыт другим оп.",
                                         "диапазона надбавок",
@@ -1445,10 +1397,8 @@ CPU_INT08U const *ErrorNumberList1[ERRORS_NUM] = {"нет",
                                         "диапазона цены",
                                         "диапазона кол-ва",
                                         "диапазона отдела",
-                                        "",
                                         "денег в секции",
                                         "денег в секции",
-                                        "с ФП",
                                         "денег по налогам",
                                         "денег по налогам",
                                         "питания",
@@ -1457,15 +1407,12 @@ CPU_INT08U const *ErrorNumberList1[ERRORS_NUM] = {"нет",
                                         "денег по налогу",
                                         "денег по налогу",
                                         "по выплате в смене",
-                                        "ФП",
                                         "отрезчика",
                                         "поддерж.",
                                         "поддерж.",
                                         "",
                                         "питания",
-                                        "нет импульсов",
                                         "нет сигнала",
-                                        "",
                                         "",
                                         "редактируется",
                                         "оборудования",
@@ -1473,10 +1420,6 @@ CPU_INT08U const *ErrorNumberList1[ERRORS_NUM] = {"нет",
                                         "формат даты",
                                         "значение в поле длины",
                                         "диапазона итога чека",
-                                        "связи с ФП",
-                                        "связи с ФП",
-                                        "связи с ФП",
-                                        "связи с ФП",
                                         "наличности",
                                         "по продажам",
                                         "по покупкам",
@@ -1488,36 +1431,16 @@ CPU_INT08U const *ErrorNumberList1[ERRORS_NUM] = {"нет",
                                         "итог надбавки",
                                         "итог скидки в чеке",
                                         "чека",
-                                        "фискализирована",
                                         "размер в настройках",
                                         "границу поля печати",
                                         "полей",
                                         "ОЗУ прошло успешно",
                                         "лимит операций в чеке",
-                                        "с ЭКЛЗ",
-                                        "отсутствует",
-                                        "Некорр.формат команды",
-                                        "состояние ЭКЛЗ",
-                                        "",
-                                        "в составе ЭКЛЗ",
-                                        "врем.ресурс ЭКЛЗ",
-                                        "переполнена",
-                                        "Неверные дата и время ",
-                                        "Нет запрошенных данных ",
-                                        "ЭКЛЗ",
-                                        "Переполнение кол-ва",
-                                        "Переполнение суммы",
-                                        "Уже активизирована",
                                         "даты и времени",
-                                        "суточный отчет",
                                         "напряжения",
-                                        "итогов чека и ЭКЛЗ",
                                         "номеров смен",
-                                        //"подк.док.пуст ",
-                                        //"док.отсутствует",
-                                        //"редактируется",
-                                        //"импульсы"
-
+                                        "редактируется",
+                                        "импульсы тахо."
 };
 
 TDataDescStruct const JournalErrorNumberDesc1 = {
@@ -1571,7 +1494,8 @@ CPU_INT08U const *ErrorNumberListEng[ERRORS_NUM] =
   "Nekriticheskaya oshibka kupuropriemnika",
 
   "Oshibka svyazi s modemom",
-  "Oshibka svyazi s FR",  
+  "Oshibka svyazi s FR",
+  
   "Oshibka FR 0x01",
   "Oshibka FR 0x02",
   "Oshibka FR 0x03",
@@ -1581,30 +1505,18 @@ CPU_INT08U const *ErrorNumberListEng[ERRORS_NUM] =
   "Oshibka FR 0x07",
   "Oshibka FR 0x08",
   "Oshibka FR 0x09",
-  "Oshibka FR 0x0A",
-  "Oshibka FR 0x0B",
+  "Oshibka FR 0x10",
   "Oshibka FR 0x11",
   "Oshibka FR 0x12",
-  "Oshibka FR 0x13",
   "Oshibka FR 0x14",
   "Oshibka FR 0x15",
   "Oshibka FR 0x16",
   "Oshibka FR 0x17",
-  "Oshibka FR 0x18",
-  "Oshibka FR 0x19",
-  "Oshibka FR 0x1A",
-  "Oshibka FR 0x1B",
-  "Oshibka FR 0x1C",
-  "Oshibka FR 0x1D",
-  "Oshibka FR 0x1F",
   "Oshibka FR 0x20",
-  "Oshibka FR 0x21",
-  "Oshibka FR 0x22",
-  "Oshibka FR 0x23",
-  "Oshibka FR 0x24",
-  "Oshibka FR 0x25",
-  "Oshibka FR 0x28",
+  "Oshibka FR 0x2F",
+  "Oshibka FR 0x30",
   "Oshibka FR 0x33",
+  "Oshibka FR 0x34",
   "Oshibka FR 0x35",
   "Oshibka FR 0x36",
   "Oshibka FR 0x37",
@@ -1612,6 +1524,7 @@ CPU_INT08U const *ErrorNumberListEng[ERRORS_NUM] =
   "Oshibka FR 0x39",
   "Oshibka FR 0x3A",
   "Oshibka FR 0x3C",
+  "Oshibka FR 0x3D",
   "Oshibka FR 0x3E",
   "Oshibka FR 0x3F",
   "Oshibka FR 0x40",
@@ -1623,6 +1536,7 @@ CPU_INT08U const *ErrorNumberListEng[ERRORS_NUM] =
   "Oshibka FR 0x46",
   "Oshibka FR 0x47",
   "Oshibka FR 0x48",
+  "Oshibka FR 0x49",
   "Oshibka FR 0x4A",
   "Oshibka FR 0x4B",
   "Oshibka FR 0x4C",
@@ -1634,8 +1548,8 @@ CPU_INT08U const *ErrorNumberListEng[ERRORS_NUM] =
   "Oshibka FR 0x52",
   "Oshibka FR 0x53",
   "Oshibka FR 0x54",
+  "Oshibka FR 0x55",
   "Oshibka FR 0x56",
-  "Oshibka FR 0x57",
   "Oshibka FR 0x58",
   "Oshibka FR 0x59",
   "Oshibka FR 0x5B",
@@ -1647,10 +1561,8 @@ CPU_INT08U const *ErrorNumberListEng[ERRORS_NUM] =
   "Oshibka FR 0x61",
   "Oshibka FR 0x62",
   "Oshibka FR 0x63",
-  "Oshibka FR 0x64",
   "Oshibka FR 0x65",
   "Oshibka FR 0x66",
-  "Oshibka FR 0x67",
   "Oshibka FR 0x68",
   "Oshibka FR 0x69",
   "Oshibka FR 0x6A",
@@ -1659,26 +1571,19 @@ CPU_INT08U const *ErrorNumberListEng[ERRORS_NUM] =
   "Oshibka FR 0x6D",
   "Oshibka FR 0x6E",
   "Oshibka FR 0x6F",
-  "Oshibka FR 0x70",
   "Oshibka FR 0x71",
   "Oshibka FR 0x72",
   "Oshibka FR 0x73",
   "Oshibka FR 0x74",
   "Oshibka FR 0x75",
-  "Oshibka FR 0x76",
   "Oshibka FR 0x77",
   "Oshibka FR 0x78",
-  "Oshibka FR 0x79",
   "Oshibka FR 0x7A",
   "Oshibka FR 0x7B",
   "Oshibka FR 0x7C",
   "Oshibka FR 0x7D",
   "Oshibka FR 0x7E",
   "Oshibka FR 0x7F",
-  "Oshibka FR 0x80",
-  "Oshibka FR 0x81",
-  "Oshibka FR 0x82",
-  "Oshibka FR 0x83",
   "Oshibka FR 0x84",
   "Oshibka FR 0x85",
   "Oshibka FR 0x86",
@@ -1690,31 +1595,16 @@ CPU_INT08U const *ErrorNumberListEng[ERRORS_NUM] =
   "Oshibka FR 0x8C",
   "Oshibka FR 0x8D",
   "Oshibka FR 0x8E",
-  "Oshibka FR 0x8F",
   "Oshibka FR 0x90",
   "Oshibka FR 0x91",
   "Oshibka FR 0x92",
   "Oshibka FR 0x93",
   "Oshibka FR 0x94",
-  "Oshibka FR 0xA0",
-  "Oshibka FR 0xA1",
-  "Oshibka FR 0xA2",
-  "Oshibka FR 0xA3",
-  "Oshibka FR 0xA4",
-  "Oshibka FR 0xA5",
-  "Oshibka FR 0xA6",
-  "Oshibka FR 0xA7",
-  "Oshibka FR 0xA8",
-  "Oshibka FR 0xA9",
-  "Oshibka FR 0xAA",
-  "Oshibka FR 0xB0",
-  "Oshibka FR 0xB1",
-  "Oshibka FR 0xB2",
   "Oshibka FR 0xC0",
-  "Oshibka FR 0xC1",
   "Oshibka FR 0xC2",
-  "Oshibka FR 0xC3"
-  "Oshibka FR 0xC4"
+  "Oshibka FR 0xC4",
+  "Oshibka FR 0xC7",
+  "Oshibka FR 0xC8"
 };
   
 TDataDescStruct const JournalErrorNumberDescEng = {
@@ -2251,6 +2141,124 @@ TDataDescStruct const BillFormatDesc = {
   1                           
 };
 
+/*************************************
+  Система налогообложения
+*************************************/
+TRangeValueULONG const TaxSystemRange = {0, 5};
+CPU_INT08U const TaxSystemName[] = "Система нал.";
+CPU_INT08U const TaxSystemList_str0[] = "ОСН";
+CPU_INT08U const TaxSystemList_str1[] = "УСН д";
+CPU_INT08U const TaxSystemList_str2[] = "УСН д-р";
+CPU_INT08U const TaxSystemList_str3[] = "ЕНВД";
+CPU_INT08U const TaxSystemList_str4[] = "ЕСП";
+CPU_INT08U const TaxSystemList_str5[] = "ПСН";
+
+CPU_INT08U const *TaxSystemList[] = {TaxSystemList_str0, TaxSystemList_str1, TaxSystemList_str2, TaxSystemList_str3, TaxSystemList_str4, TaxSystemList_str5};
+
+TDataDescStruct const TaxSystemDesc = {
+  DATA_DESC_EDIT,           // тип дескриптора
+  DATA_TYPE_ULONG,          // тип параметра
+  DATA_LOC_FRAM,            // расположение параметра
+  DATA_NO_ARRAY,            // признак массива
+  0,             // размер массива
+  0,        // указатель на дескриптор индекса массива
+  (void*)offsetof(TFramMap, TaxSystem),            // указатель на переменную или адрес FRAM
+  (void*)&TaxSystemRange,     // указатель на границы параметра
+  NULL,                     // функция по изменению
+  sizeof(CPU_INT32U),       // смещение между элементами в массиве
+  TaxSystemName,       // указатель на строку названия параметра
+  DATA_IS_INDEX,            // признак индексного параметра (список строк)
+  TaxSystemList,                     // указатель на список строк для индексного параметра
+  DATA_INIT_DISABLE,
+  0                           
+};
+
+/*************************************
+  Индекс налога
+*************************************/
+TRangeValueULONG const TaxFormatRange = {0, 6};
+CPU_INT08U const TaxFormatName[] = "Налог:";
+CPU_INT08U const TaxFormatList_str0[] = "откл.";
+CPU_INT08U const TaxFormatList_str1[] = "  1  ";
+CPU_INT08U const TaxFormatList_str2[] = "  2  ";
+CPU_INT08U const TaxFormatList_str3[] = "  3  ";
+CPU_INT08U const TaxFormatList_str4[] = "  4  ";
+CPU_INT08U const TaxFormatList_str5[] = "  5  ";
+CPU_INT08U const TaxFormatList_str6[] = "  6  ";
+CPU_INT08U const *TaxFormatList[] = {TaxFormatList_str0, TaxFormatList_str1, TaxFormatList_str2, TaxFormatList_str3, TaxFormatList_str4, TaxFormatList_str5, TaxFormatList_str6};
+
+TDataDescStruct const TaxFormatDesc = {
+  DATA_DESC_EDIT,           // тип дескриптора
+  DATA_TYPE_ULONG,          // тип параметра
+  DATA_LOC_FRAM,            // расположение параметра
+  DATA_NO_ARRAY,            // признак массива
+  0,             // размер массива
+  0,        // указатель на дескриптор индекса массива
+  (void*)offsetof(TFramMap, TaxFormat),            // указатель на переменную или адрес FRAM
+  (void*)&TaxFormatRange,     // указатель на границы параметра
+  NULL,                     // функция по изменению
+  sizeof(CPU_INT32U),       // смещение между элементами в массиве
+  TaxFormatName,       // указатель на строку названия параметра
+  DATA_IS_INDEX,            // признак индексного параметра (список строк)
+  TaxFormatList,                     // указатель на список строк для индексного параметра
+  DATA_INIT_DISABLE,
+  0                           
+};
+
+/*************************************
+  Предмет расчета
+*************************************/
+TRangeValueULONG const SubjSellRange = {0, 2};
+CPU_INT08U const SubjSellName[] = "Предм.расчета";
+CPU_INT08U const SubjSellList_str0[] = "ТОВАР";
+CPU_INT08U const SubjSellList_str1[] = "РАБОТА";
+CPU_INT08U const SubjSellList_str2[] = "УСЛУГА";
+CPU_INT08U const *SubjSellList[] = {SubjSellList_str0, SubjSellList_str1, SubjSellList_str2};
+
+TDataDescStruct const SubjSellDesc = {
+  DATA_DESC_EDIT,           // тип дескриптора
+  DATA_TYPE_ULONG,          // тип параметра
+  DATA_LOC_FRAM,            // расположение параметра
+  DATA_NO_ARRAY,            // признак массива
+  0,             // размер массива
+  0,        // указатель на дескриптор индекса массива
+  (void*)offsetof(TFramMap, SubjSell),            // указатель на переменную или адрес FRAM
+  (void*)&SubjSellRange,     // указатель на границы параметра
+  NULL,                     // функция по изменению
+  sizeof(CPU_INT32U),       // смещение между элементами в массиве
+  SubjSellName,       // указатель на строку названия параметра
+  DATA_IS_INDEX,            // признак индексного параметра (список строк)
+  SubjSellList,                     // указатель на список строк для индексного параметра
+  DATA_INIT_DISABLE,
+  0                           
+};
+
+/*************************************
+  Тип команд работы с чеком
+*************************************/
+TRangeValueULONG const CommandV2Range = {0, 1};
+CPU_INT08U const CommandV2Name[] = "Тип команд";
+CPU_INT08U const CommandV2List_str0[] = "старый";
+CPU_INT08U const CommandV2List_str1[] = "V2";
+CPU_INT08U const *CommandV2List[] = {CommandV2List_str0, CommandV2List_str1};
+
+TDataDescStruct const CommandV2Desc = {
+  DATA_DESC_EDIT,           // тип дескриптора
+  DATA_TYPE_ULONG,          // тип параметра
+  DATA_LOC_FRAM,            // расположение параметра
+  DATA_NO_ARRAY,            // признак массива
+  0,             // размер массива
+  0,        // указатель на дескриптор индекса массива
+  (void*)offsetof(TFramMap, CommandV2),            // указатель на переменную или адрес FRAM
+  (void*)&CommandV2Range,     // указатель на границы параметра
+  NULL,                     // функция по изменению
+  sizeof(CPU_INT32U),       // смещение между элементами в массиве
+  CommandV2Name,       // указатель на строку названия параметра
+  DATA_IS_INDEX,            // признак индексного параметра (список строк)
+  CommandV2List,                     // указатель на список строк для индексного параметра
+  DATA_INIT_DISABLE,
+  1                           
+};
 
 /*************************************
   Название услуги
@@ -2792,6 +2800,12 @@ const TDataDescArrayStruct AllDataArray[] = {
   &DeferredStartDesc,
   &StartButtonNameDesc,
 
+  &TaxSystemDesc,
+  &TaxFormatDesc,
+  &SubjSellDesc,
+  &DisableFiscalErrorsDesc,
+  &CommandV2Desc,
+  
   NULL
 };
 
