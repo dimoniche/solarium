@@ -635,15 +635,15 @@ void UserStartupFunc(void)
   GetData(&EnableModemDesc, &enable, 0, DATA_FLAG_SYSTEM_INDEX);  
   SetData(&EnableCoinDesc, &enable, 0, DATA_FLAG_SYSTEM_INDEX);  
   
-  // инициализация модема - пока подключаем вместо фискальника
-  if (InitModem() != 0)
-  {
-    SetErrorFlag(ERROR_MODEM_CONN);
-  }
-  else
-  {
-    ClrErrorFlag(ERROR_MODEM_CONN);
-  }
+//  // инициализация модема - пока подключаем вместо фискальника
+//  if (InitModem() != 0)
+//  {
+//    SetErrorFlag(ERROR_MODEM_CONN);
+//  }
+//  else
+//  {
+//    ClrErrorFlag(ERROR_MODEM_CONN);
+//  }
 
   // запустим монетник
   InitCoin();
