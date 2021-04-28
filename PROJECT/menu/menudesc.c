@@ -877,8 +877,8 @@ const TMenuLine line_DeviceMenu_4 = {
   (void*)&ModemSetupPanel                            // ïàíåëü äëÿ ïåğåõîäà
 };
 
-const TMenuLineArray arr_DeviceMenuArray[] = {&line_DeviceMenu_0, &line_DeviceMenu_1, &line_DeviceMenu_2, &line_DeviceMenu_3, &line_DeviceMenu_4, NULL};
-const TMenuPanel DeviceMenuPanel[] = {arr_DeviceMenuArray, NULL, 5, MENU_PANEL_STANDARD};
+const TMenuLineArray arr_DeviceMenuArray[] = {&line_DeviceMenu_0, &line_DeviceMenu_1, &line_DeviceMenu_2, &line_DeviceMenu_3, NULL};
+const TMenuPanel DeviceMenuPanel[] = {arr_DeviceMenuArray, NULL, 4, MENU_PANEL_STANDARD};
 
 
 /***********************************
@@ -956,8 +956,8 @@ const TMenuLine line_FrMenu_9 = {
   NULL                     
 };
 
-const TMenuLineArray arr_FrMenuArray[] = {&line_FrMenu_0, &line_FrMenu_1, &line_FrMenu_2, &line_FrMenu_3, &line_FrMenu_4, &line_FrMenu_5, &line_FrMenu_6, &line_FrMenu_7, &line_FrMenu_8, &line_FrMenu_9, NULL};
-const TMenuPanel FrMenuPanel[] = {arr_FrMenuArray, NULL, 10, MENU_PANEL_STANDARD};
+const TMenuLineArray arr_FrMenuArray[] = {&line_FrMenu_0, &line_FrMenu_1, &line_FrMenu_3, &line_FrMenu_4, &line_FrMenu_5, &line_FrMenu_6, &line_FrMenu_7, &line_FrMenu_8, &line_FrMenu_9, NULL};
+const TMenuPanel FrMenuPanel[] = {arr_FrMenuArray, NULL, 9, MENU_PANEL_STANDARD};
 
 /***********************************
   ÌÅÍŞ ÍÀÑÒĞÎÉÊÀ ÌÎÍÅÒÎÏĞÈÅÌÍÈÊÀ

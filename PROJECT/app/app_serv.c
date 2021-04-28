@@ -622,7 +622,7 @@ void UserStartupFunc(void)
   // запустим валидатор
   StartUpValidator();
   
-  OSTimeDly(10000);
+  OSTimeDly(1000);
   InitFiscal();
   
   // проинициализируем часы

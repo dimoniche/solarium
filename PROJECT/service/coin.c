@@ -14,6 +14,8 @@ void  InitImpInput(void);
 
 CPU_INT32U  CoinImpCounter;
 
+CPU_INT08U  coin_enabled;
+
 void CoinTask(void *p_arg)
 {
   
@@ -21,9 +23,13 @@ void CoinTask(void *p_arg)
     {
       CPU_INT32U enable_coin;
       OSTimeDly(100);
-      GetData(&EnableCoinDesc, &enable_coin, 0, DATA_FLAG_SYSTEM_INDEX);  
-      if (enable_coin)
+      GetData(&EnableCoinDesc, &enable_coin, 0, DATA_FLAG_SYSTEM_INDEX);
+      
+      if (enable_coin && coin_enabled)
         {
+          // для разрешения монетника выставим низкий уровень
+          FIO0CLR_bit.P0_24  = 1;
+          
           if (GetCoinCount())
           {
             PostUserEvent(EVENT_COIN_INSERTED);
@@ -31,6 +37,9 @@ void CoinTask(void *p_arg)
         }
       else
        {
+          // для запрета монетника выставим высокий уровень
+          FIO0SET_bit.P0_24  = 1;
+
           CoinDisable();
           GetResetCoinCount();
         }
@@ -40,12 +49,12 @@ void CoinTask(void *p_arg)
 
 void CoinDisable(void)
 {
-
+    coin_enabled = 0;
 }
 
 void CoinEnable(void)
 {
-
+    coin_enabled = 1;
 }
 
 // получить число монет
@@ -77,6 +86,8 @@ CPU_INT32U GetResetCoinCount(void)
 void InitCoin(void)
 {
   CoinImpCounter = 0;
+  coin_enabled = 0;
+
   InitImpInput();
   
   OSTaskCreate(CoinTask, (void *)0, (OS_STK *)&CoinTaskStk[COIN_TASK_STK_SIZE-1], COIN_TASK_PRIO);
@@ -137,11 +148,11 @@ void  InitImpInput (void)
     FIO0MASK_bit.P0_23 = 0;
 
     // inhibit
-//    PINSEL1_bit.P0_24 = 0x0;
-//    PINMODE1_bit.P0_24 = 0;
-//    FIO0DIR_bit.P0_24  = 1;
-//    FIO0MASK_bit.P0_24 = 0;
-//    FIO0SET_bit.P0_24  = 1;
+    PINSEL1_bit.P0_24 = 0x0;
+    PINMODE1_bit.P0_24 = 0;
+    FIO0DIR_bit.P0_24  = 1;
+    FIO0MASK_bit.P0_24 = 0;
+    FIO0SET_bit.P0_24  = 1;
   
     pclk_freq         =   BSP_CPU_PclkFreq(23);
     rld_cnts          =   pclk_freq / INPUT_CAPTURE_FREQ;
