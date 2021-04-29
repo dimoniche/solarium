@@ -624,7 +624,7 @@ void ClrFiscalErrorByCode(CPU_INT08U err)
 
 // печать чека на ФР
 // time теперь в секундах
-int PrintFiscalBill(CPU_INT32U money, CPU_INT32U time)
+int PrintFiscalBill(CPU_INT32U money, CPU_INT32U time, CPU_INT32U online)
 {
   CPU_INT08U err;
   CPU_INT64U count = (time*1000)/60;
@@ -798,27 +798,53 @@ repeat_close:
         tax[0] = (CPU_INT08U)tax1;
     }
     
-    if (((ext == 0) && (FiscCloseBill(DEFAULT_PASS, &cash, &tax[0], "Спасибо за покупку!!!", &err) != FISC_OK))
-        || ((ext) && (FiscCloseBillV2(DEFAULT_PASS, &cash, tax[0], "Спасибо за покупку!!!!", &err) != FISC_OK))
-       )
+    if(online)
     {
-      if (err)
-      {
-        SetFiscalErrorByCode(err);
-      }
-      else
-      {
-        // нет соединения
-        ClearFiscalErrors();
-        FiscalConnState = FISCAL_NOCONN;
-        SetErrorFlag(ERROR_FR_CONN);
-      }
-      if (repeat)
-      {
-        FPost();
-        return -4;
-      }
-      repeat++;
+        if(((ext) && (FiscCloseBillV2Online(DEFAULT_PASS, &cash, tax[0], "Спасибо за покупку!!!", &err) != FISC_OK)))
+        {
+            if (err)
+            {
+                SetFiscalErrorByCode(err);
+            }
+            else
+            {
+                // нет соединения
+                ClearFiscalErrors();
+                FiscalConnState = FISCAL_NOCONN;
+                SetErrorFlag(ERROR_FR_CONN);
+            }
+            if (repeat)
+            {
+                FPost();
+                return -4;
+            }
+            repeat++;
+        }
+    }
+    else
+    {
+        if (((ext == 0) && (FiscCloseBill(DEFAULT_PASS, &cash, &tax[0], "Спасибо за покупку!!!", &err) != FISC_OK))
+            || ((ext) && (FiscCloseBillV2(DEFAULT_PASS, &cash, tax[0], "Спасибо за покупку!!!!", &err) != FISC_OK))
+           )
+        {
+          if (err)
+          {
+            SetFiscalErrorByCode(err);
+          }
+          else
+          {
+            // нет соединения
+            ClearFiscalErrors();
+            FiscalConnState = FISCAL_NOCONN;
+            SetErrorFlag(ERROR_FR_CONN);
+          }
+          if (repeat)
+          {
+            FPost();
+            return -4;
+          }
+          repeat++;
+        }
     }
     
   if (repeat)

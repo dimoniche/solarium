@@ -370,6 +370,7 @@ extern int FiscOpenDay(CPU_INT32U pass, CPU_INT08U* err);
 
 extern int FiscMakeSellV2(CPU_INT32U pass, CPU_INT64U *count, CPU_INT64U *price, CPU_INT08U department, CPU_INT08U* tax, CPU_INT08U subj, char* text, CPU_INT08U* err);
 extern int FiscCloseBillV2(CPU_INT32U pass, CPU_INT64U *cash, CPU_INT08U taxsys, char* text, CPU_INT08U* err);
+extern int FiscCloseBillV2Online(CPU_INT32U pass, CPU_INT64U *cash, CPU_INT08U taxsys, char* text, CPU_INT08U* err);
 
 extern int FiscWriteTableData(CPU_INT32U pass, CPU_INT08U table, CPU_INT16U row, CPU_INT08U field, CPU_INT08U field_len, CPU_INT08U* data, CPU_INT08U* err);
 extern int FiscReadTableData(CPU_INT32U pass, CPU_INT08U table, CPU_INT16U row, CPU_INT08U field, CPU_INT08U field_len, CPU_INT08U* data, CPU_INT08U* err);

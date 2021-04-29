@@ -43,5 +43,9 @@ typedef struct{
   CPU_INT32U  CommandV2;
   CPU_INT32U  TaxSystem;
   
+  // линия безналичных денег
+  CPU_INT32U FRAM_AcceptedBankMoney;
+  CPU_INT32U crc_AcceptedBankMoney;
+  
 }TFramMap;
 

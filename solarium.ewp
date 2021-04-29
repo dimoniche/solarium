@@ -585,7 +585,7 @@
         </option>
         <option>
           <name>OOCOutputFile</name>
-          <state>solarium_3_33.hex</state>
+          <state>solarium_3_34.hex</state>
         </option>
         <option>
           <name>OOCCommandLineProducer</name>

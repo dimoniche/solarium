@@ -143,6 +143,7 @@ extern TDataDescStruct const CounterMoneyDesc;
 extern TDataDescStruct const CounterTimeDesc;
 extern TDataDescStruct const CounterChannelRunDesc;
 extern TDataDescStruct const CounterChannelMoneyDesc;
+extern TDataDescStruct const CounterChannelBankMoneyDesc;
 extern TDataDescStruct const CounterChannelTimeDesc;
 extern TDataDescStruct const ChannelStIndexDesc;
 extern TDataDescStruct const ClearStatCmdDesc;
@@ -151,6 +152,9 @@ extern TDataDescStruct const NameChannelDesc;
 
 extern TDataDescStruct const AcceptedMoneyDesc;
 extern TDataDescStruct const AcceptedMoneyCRC16Desc;
+
+extern TDataDescStruct const AcceptedBankMoneyDesc;
+extern TDataDescStruct const AcceptedBankMoneyCRC16Desc;
 
 extern TDataDescStruct const DisableFiscalErrorsDesc;
 
@@ -177,6 +181,7 @@ extern TDataDescStruct const MasterPassTempDesc;
 
 extern TDataDescStruct const CounterChannelRunLongDesc;
 extern TDataDescStruct const CounterChannelMoneyLongDesc;
+extern TDataDescStruct const CounterChannelBankMoneyLongDesc;
 extern TDataDescStruct const CounterChannelTimeLongDesc;
 extern TDataDescStruct const ChannelStLongIndexDesc;
 

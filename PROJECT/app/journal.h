@@ -92,7 +92,7 @@ typedef struct{
   CPU_INT08U event;
     #define JOURNAL_EVENT_NO_EVENT         0  // нет события
     #define JOURNAL_EVENT_MONEY_NOTE       1  // событие получения купюры
-    #define JOURNAL_EVENT_MONEY_COIN       2  // событие получения монеты (кол-во рублей)
+    #define JOURNAL_EVENT_MONEY_COIN       2  // событие получения монеты (кол-во рублей) (теперь это банковский терминал)
     #define JOURNAL_EVENT_START_SESSION    3  // событие начала сеанса
     #define JOURNAL_EVENT_END_SESSION      4  // событие конца сеанса
     #define JOURNAL_EVENT_DEVICE_ON        6  // включение устройства
@@ -105,8 +105,8 @@ typedef struct{
     #define JOURNAL_EVENT_PASS_FAIL        13  // неверный ввод пароля
     #define JOURNAL_EVENT_EMAIL_OK         14  // правильно отправлен email
     #define JOURNAL_EVENT_EMAIL_FAIL       15  // ошибка при отправке email
-  
-    #define JOURNAL_EVENTS_NUM             16  // число событий
+    #define JOURNAL_EVENT_PRINT_BILL_ONLINE     16   // печать чека с деньгами с банковского терминала  
+    #define JOURNAL_EVENTS_NUM             17  // число событий
 
   // канал
   CPU_INT08U channel;
@@ -122,6 +122,8 @@ typedef struct{
   CPU_INT32U  CounterChannelTime[CHANNELS_NUM];
   // Сумма денег поканально  
   CPU_INT32U  CounterChannelMoney[CHANNELS_NUM];
+  // Сумма безналичных денег поканально  
+  CPU_INT32U  CounterChannelBankMoney[CHANNELS_NUM];
   
   // общее число запусков 
   CPU_INT32U  CounterRun;
@@ -146,6 +148,9 @@ typedef struct{
   CPU_INT32U  CounterChannelTimeLong[CHANNELS_NUM];
   // Сумма денег поканально  
   CPU_INT32U  CounterChannelMoneyLong[CHANNELS_NUM];
+  // Сумма безналичных денег поканально  
+  CPU_INT32U  CounterChannelBankMoneyLong[CHANNELS_NUM];
+  
   CPU_INT32U  CounterRunLong;
   CPU_INT32U  CounterTimeLong;
   CPU_INT32U  CounterMoneyLong;
@@ -167,7 +172,7 @@ extern void ClearEventJournal(void);
 extern void GetEventStr(char* str, char event);
 extern int GetEventRecord(TEventRecord* record, CPU_INT32U index);
 extern int GetErrorRecord(TErrorRecord* record, CPU_INT32U index);
-extern void IncCounter(CPU_INT08U ch, CPU_INT32U time, CPU_INT32U money);
+extern void IncCounter(CPU_INT08U ch, CPU_INT32U time, CPU_INT32U money, CPU_INT32U moneyBank);
 extern void ClearCounters(void);
 extern void ErrorServer(void);
 extern int TstCriticalValidatorErrors(void);

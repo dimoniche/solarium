@@ -65,6 +65,9 @@ void LoadAcceptedMoney(void);
 void SetAcceptedMoney(CPU_INT32U money);
 void ClearAcceptedMoney(void);
 CPU_INT32U GetAcceptedMoney(void);
+void SetAcceptedBankMoney(CPU_INT32U money);
+void ClearAcceptedBankMoney(void);
+CPU_INT32U GetAcceptedBankMoney(void);
 void InitPass(void);
 void UserPrintDeferredWaitMenu(int channel);
 
@@ -177,9 +180,10 @@ void UserAppTask(void *p_arg)
                   if (was_critical_error)
                   {
                     if (IsValidatorConnected()) CC_CmdBillType(0xffffff, 0xffffff, ADDR_FL);
-                    CPU_INT32U price=1, pricetime=0, maxtime = 0xffffffff, accmoney = GetAcceptedMoney();
+                    CPU_INT32U price=1, pricetime=0, maxtime = 0xffffffff, accmoney = GetAcceptedMoney() + GetAcceptedBankMoney();
                     GetRecentChannelPrice(RecentChannel, &price, &pricetime);
                     GetData(&MaxWorkTimeDesc, &maxtime, RecentChannel, DATA_FLAG_DIRECT_INDEX);
+                    
                     if ((pricetime*accmoney*60)/price > maxtime*60)
                     {
                       CoinDisable();
@@ -257,10 +261,12 @@ void UserAppTask(void *p_arg)
                 CPU_INT32U cpp = 1;
                 CPU_INT32U money, accmoney;
                 GetData(&CoinPerPulseDesc, &cpp, 0, DATA_FLAG_SYSTEM_INDEX);
+                
                 money = cpp*GetResetCoinCount();
-                accmoney = GetAcceptedMoney();
+                accmoney = GetAcceptedBankMoney();
                 accmoney += money;
-                SetAcceptedMoney(accmoney);
+                SetAcceptedBankMoney(accmoney);
+                
                 if (UserMenuState == USER_STATE_ACCEPT_MONEY)
                 {
                   UserPrintMoneyMenu();  
@@ -271,6 +277,10 @@ void UserAppTask(void *p_arg)
                 CPU_INT32U price=1, pricetime=0, maxtime = 0xffffffff;
                 GetRecentChannelPrice(RecentChannel, &price, &pricetime);
                 GetData(&MaxWorkTimeDesc, &maxtime, RecentChannel, DATA_FLAG_DIRECT_INDEX);
+                
+                // добавим еще и наличные
+                accmoney += GetAcceptedMoney();
+                
                 if ((pricetime*accmoney*60)/price > maxtime*60)
                   {
                     CoinDisable();
@@ -283,9 +293,11 @@ void UserAppTask(void *p_arg)
                 CPU_INT32U billnom_index;
                 CPU_INT32U billnom = GetResetBillCount(&billnom_index);
                 CPU_INT32U price=1, pricetime=0, maxtime = 0xffffffff, accmoney;
+                
                 GetRecentChannelPrice(RecentChannel, &price, &pricetime);
                 GetData(&MaxWorkTimeDesc, &maxtime, RecentChannel, DATA_FLAG_DIRECT_INDEX);
-                accmoney = GetAcceptedMoney();
+                accmoney = GetAcceptedMoney() + GetAcceptedBankMoney();
+                
                 if ((pricetime*(accmoney+billnom)*60)/price > maxtime*60)
                   {
                     max_msg = 3;
@@ -509,29 +521,58 @@ void UserAppTask(void *p_arg)
 
               if (UserMenuState == USER_STATE_ACCEPT_MONEY)
                 { // пользователь внес деньги и нажал СТАРТ
-                  CPU_INT32U price=1, pricetime=0, mintime=0,accmoney;
+                  CPU_INT32U price=1, pricetime=0, mintime=0,accmoney,accmoneyBank;
                   GetRecentChannelPrice(RecentChannel, &price, &pricetime);
+                  
                   accmoney = GetAcceptedMoney();
-                  ChannelsPayedTime[RecentChannel] = (pricetime*accmoney*60)/price;
+                  accmoneyBank = GetAcceptedBankMoney();
+                  
+                  ChannelsPayedTime[RecentChannel] = (pricetime*(accmoney + accmoneyBank)*60)/price;
                   GetData(&MinWorkTimeDesc, &mintime, RecentChannel, DATA_FLAG_DIRECT_INDEX);
+                  
                   if (ChannelsPayedTime[RecentChannel] >= mintime*60)
                     { // оплаченное время больше минимума, можно работать
                       if (IsValidatorConnected()) CC_CmdBillType(0x000000, 0x000000, ADDR_FL);
-                      // напечатаем чек
-                      if (IsFiscalConnected())
+                      CoinDisable();
+
+                      if(accmoney)
                       {
-                        if (PrintFiscalBill(accmoney, ChannelsPayedTime[RecentChannel]) == 0)
-                        {
-                            SaveEventRecord(RecentChannel, JOURNAL_EVENT_PRINT_BILL, GetTimeSec());
-                        }
-                        else
-                        {
-                            // ошибка печати чека
-                            
-                        }
+                          // напечатаем чек - наличка
+                          if (IsFiscalConnected())
+                          {
+                              if (PrintFiscalBill(accmoney, (pricetime*accmoney*60)/price, 0) == 0)
+                              {
+                                  SaveEventRecord(RecentChannel, JOURNAL_EVENT_PRINT_BILL, GetTimeSec());
+                              }
+                              else
+                              {
+                                  // ошибка печати чека
+                                  
+                              }
+                          }
                       }
-                      IncCounter(RecentChannel, ChannelsPayedTime[RecentChannel], accmoney);
+ 
+                      if(accmoneyBank)
+                      {
+                          // напечатаем чек - наличка
+                          if (IsFiscalConnected())
+                          {
+                              if (PrintFiscalBill(accmoneyBank, (pricetime*accmoneyBank*60)/price, 1) == 0)
+                              {
+                                  SaveEventRecord(RecentChannel, JOURNAL_EVENT_PRINT_BILL_ONLINE, GetTimeSec());
+                              }
+                              else
+                              {
+                                  // ошибка печати чека
+                                  
+                              }
+                          }
+                      }
+
+                      IncCounter(RecentChannel, ChannelsPayedTime[RecentChannel], accmoney, accmoneyBank);
                       SetAcceptedMoney(0);
+                      SetAcceptedBankMoney(0);
+                      
                       // грузим в счетчик время паузу до
                                    
                       CPU_INT32U deferred = 0;
@@ -631,20 +672,6 @@ void UserStartupFunc(void)
   // сделаем запись о включении
   SaveEventRecord(0, JOURNAL_EVENT_DEVICE_ON, GetTimeSec());
 
-  CPU_INT32U enable;
-  GetData(&EnableModemDesc, &enable, 0, DATA_FLAG_SYSTEM_INDEX);  
-  SetData(&EnableCoinDesc, &enable, 0, DATA_FLAG_SYSTEM_INDEX);  
-  
-//  // инициализация модема - пока подключаем вместо фискальника
-//  if (InitModem() != 0)
-//  {
-//    SetErrorFlag(ERROR_MODEM_CONN);
-//  }
-//  else
-//  {
-//    ClrErrorFlag(ERROR_MODEM_CONN);
-//  }
-
   // запустим монетник
   InitCoin();
   
@@ -727,7 +754,7 @@ void UserPrintMoneyMenu(void)
     
   sprintf(buf, "Внесите деньги");
   PrintUserMenuStr(buf, 0);
-  accmoney = GetAcceptedMoney();
+  accmoney = GetAcceptedMoney() + GetAcceptedBankMoney();
   sprintf(buf, "Принято %d руб.", accmoney);
   PrintUserMenuStr(buf, 1);
 
@@ -1136,7 +1163,21 @@ void LoadAcceptedMoney(void)
       SetData(&AcceptedMoneyDesc, &m, 0, DATA_FLAG_SYSTEM_INDEX);
       SetData(&AcceptedMoneyCRC16Desc, &crc, 0, DATA_FLAG_SYSTEM_INDEX);
     }
+
+   // считаем cохраненные деньги из FRAM
+  GetData(&AcceptedBankMoneyDesc, &m, 0, DATA_FLAG_SYSTEM_INDEX);    
+  // считаем crc16 этих денег из FRAM 
+  GetData(&AcceptedBankMoneyCRC16Desc, &crc, 0, DATA_FLAG_SYSTEM_INDEX);    
     
+    crct = CRC16((unsigned char*)&m, sizeof(CPU_INT32U));
+  
+    if (crct != crc)
+      { // обнуляем, если crc не сошлась
+        m = 0;
+        crc = CRC16((unsigned char*)&m, sizeof(CPU_INT32U));
+        SetData(&AcceptedBankMoneyDesc, &m, 0, DATA_FLAG_SYSTEM_INDEX);
+        SetData(&AcceptedBankMoneyCRC16Desc, &crc, 0, DATA_FLAG_SYSTEM_INDEX);
+      }
 }
 
 // добавить денег
@@ -1164,6 +1205,37 @@ CPU_INT32U GetAcceptedMoney(void)
 {
   CPU_INT32U m;
   GetData(&AcceptedMoneyDesc, &m, 0, DATA_FLAG_SYSTEM_INDEX);
+  return m;
+}
+
+// добавить денег
+void SetAcceptedBankMoney(CPU_INT32U money)
+{
+  CPU_INT32U m,crc;
+
+  m=money;
+  crc = CRC16((unsigned char*)&m, sizeof(CPU_INT32U));
+  SetData(&AcceptedBankMoneyDesc, &m, 0, DATA_FLAG_SYSTEM_INDEX);
+  SetData(&AcceptedBankMoneyCRC16Desc, &crc, 0, DATA_FLAG_SYSTEM_INDEX);
+}
+
+// очистить счетчик денег
+void ClearAcceptedBankMoney(void)
+{
+  CPU_INT32U m,crc;
+
+  m=0;
+  crc = CRC16((unsigned char*)&m, sizeof(CPU_INT32U));
+  SetData(&AcceptedBankMoneyDesc, &m, 0, DATA_FLAG_SYSTEM_INDEX);
+  SetData(&AcceptedBankMoneyCRC16Desc, &crc, 0, DATA_FLAG_SYSTEM_INDEX);
+}
+
+// очистить счетчик денег
+CPU_INT32U GetAcceptedBankMoney(void)
+{
+  CPU_INT32U m;
+
+  GetData(&AcceptedBankMoneyDesc, &m, 0, DATA_FLAG_SYSTEM_INDEX);
   return m;
 }
 

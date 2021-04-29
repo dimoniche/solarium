@@ -329,12 +329,19 @@ const TMenuLine line_ChannelCountersMenu_2 = {
 const TMenuLine line_ChannelCountersMenu_3 = {
   MENU_LINE_SHOW_DESC,               // тип пункта меню
   0,                              // доп. флаги  
+  (void*)&CounterChannelBankMoneyDesc,       // указатель на текстовую строку или дескриптор
+  NULL                            // панель для перехода
+};
+
+const TMenuLine line_ChannelCountersMenu_4 = {
+  MENU_LINE_SHOW_DESC,               // тип пункта меню
+  0,                              // доп. флаги  
   (void*)&CounterChannelTimeDesc,       // указатель на текстовую строку или дескриптор
   NULL                            // панель для перехода
 };
 
-const TMenuLineArray arr_ChannelCountersArray[] = {&line_ChannelCountersMenu_0, &line_ChannelCountersMenu_1, &line_ChannelCountersMenu_2, &line_ChannelCountersMenu_3, NULL};
-const TMenuPanel ChannelCountersPanel[] = {arr_ChannelCountersArray, NULL, 4, MENU_PANEL_STATIC};
+const TMenuLineArray arr_ChannelCountersArray[] = {&line_ChannelCountersMenu_0, &line_ChannelCountersMenu_1, &line_ChannelCountersMenu_2, &line_ChannelCountersMenu_3, &line_ChannelCountersMenu_4, NULL};
+const TMenuPanel ChannelCountersPanel[] = {arr_ChannelCountersArray, NULL, 5, MENU_PANEL_STANDARD};
 
 
 /***********************************
@@ -839,7 +846,7 @@ const TMenuPanel PriceWeekendMenuPanel[] = {arr_PriceMenuArrayWend, OnEnterPanel
 
 const CPU_INT08U str_DeviceMenu_0[] = "   ОБОРУДОВАНИЕ";
 const CPU_INT08U str_DeviceMenu_1[] = "ФР";
-const CPU_INT08U str_DeviceMenu_2[] = "Монетоприемник";
+const CPU_INT08U str_DeviceMenu_2[] = "Банк.терминал";
 const CPU_INT08U str_DeviceMenu_3[] = "Модем";
 
 const TMenuLine line_DeviceMenu_0 = {
@@ -962,7 +969,7 @@ const TMenuPanel FrMenuPanel[] = {arr_FrMenuArray, NULL, 9, MENU_PANEL_STANDARD}
 /***********************************
   МЕНЮ НАСТРОЙКА МОНЕТОПРИЕМНИКА
 ***********************************/
-const CPU_INT08U str_CoinMenu_0[] = "НАСТРОйКИ МОНЕТОПР.";
+const CPU_INT08U str_CoinMenu_0[] = "НАСТРОйКИ БАНК.ТЕРМ.";
 
 const TMenuLine line_CoinMenu_0 = {
   MENU_LINE_STRING,               // тип пункта меню
@@ -1655,7 +1662,7 @@ void PrintEventJournalRecord(TEventRecord *record)
         {
           sprintf(str_EventData, "");
         }
-      else if (record->event == JOURNAL_EVENT_PRINT_BILL)
+      else if (record->event == JOURNAL_EVENT_PRINT_BILL || record->event == JOURNAL_EVENT_PRINT_BILL_ONLINE)
         {
           sprintf(str_EventData, "канал %d", record->channel+1);
         }
@@ -1834,9 +1841,16 @@ const TMenuLine line_ChannelCountersLongMenu_2 = {
 const TMenuLine line_ChannelCountersLongMenu_3 = {
   MENU_LINE_SHOW_DESC,               // тип пункта меню
   0,                              // доп. флаги  
+  (void*)&CounterChannelBankMoneyLongDesc,       // указатель на текстовую строку или дескриптор
+  NULL                            // панель для перехода
+};
+
+const TMenuLine line_ChannelCountersLongMenu_4 = {
+  MENU_LINE_SHOW_DESC,               // тип пункта меню
+  0,                              // доп. флаги  
   (void*)&CounterChannelTimeLongDesc,       // указатель на текстовую строку или дескриптор
   NULL                            // панель для перехода
 };
 
-const TMenuLineArray arr_ChannelCountersLongArray[] = {&line_ChannelCountersLongMenu_0, &line_ChannelCountersLongMenu_1, &line_ChannelCountersLongMenu_2, &line_ChannelCountersLongMenu_3, NULL};
-const TMenuPanel ChannelCountersLongPanel[] = {arr_ChannelCountersLongArray, NULL, 4, MENU_PANEL_STATIC};
+const TMenuLineArray arr_ChannelCountersLongArray[] = {&line_ChannelCountersLongMenu_0, &line_ChannelCountersLongMenu_1, &line_ChannelCountersLongMenu_2, &line_ChannelCountersLongMenu_3, &line_ChannelCountersLongMenu_4, NULL};
+const TMenuPanel ChannelCountersLongPanel[] = {arr_ChannelCountersLongArray, NULL, 5, MENU_PANEL_STANDARD};
