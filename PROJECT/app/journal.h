@@ -125,11 +125,11 @@ typedef struct{
   // Сумма безналичных денег поканально  
   CPU_INT32U  CounterChannelBankMoney[CHANNELS_NUM];
   
-  // общее число запусков 
+  // общее число запусков
   CPU_INT32U  CounterRun;
   // общее Суммарное время работы, сек.
   CPU_INT32U  CounterTime;
-  // общее Сумма денег   
+  // общее Сумма денег
   CPU_INT32U  CounterMoney;
   
   // счетчики купюр в купюрнике по номиналам

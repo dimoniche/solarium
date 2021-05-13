@@ -624,10 +624,11 @@ void ClrFiscalErrorByCode(CPU_INT08U err)
 
 // печать чека на ‘–
 // time теперь в секундах
-int PrintFiscalBill(CPU_INT32U money, CPU_INT32U time, CPU_INT32U online)
+// ext - расширенный формат команды (ќпераци€ V2  расширенное закрытие чека)
+int PrintFiscalBill(CPU_INT32U money, CPU_INT32U time, CPU_INT32U online, CPU_INT32U nomprice, CPU_INT32U nompricetime)
 {
   CPU_INT08U err;
-  CPU_INT64U count = (time*1000)/60;
+  CPU_INT64U count = ((CPU_INT64U)((CPU_INT64U)((CPU_INT64U)time * 1000) / 60));
   CPU_INT64U cash = money*100;
   CPU_INT64U price = (CPU_INT64U)(((double)money*100*60)/time);
   CPU_INT08U tax[4] = {0,0,0,0};
@@ -702,9 +703,10 @@ repeat_sell1:
 
       if (ext)
       {
-        count *= 1000;
+          price = (CPU_INT64U)(((CPU_INT64U)nomprice * 100) / nompricetime);
+          count = ((CPU_INT64U)((CPU_INT64U)((CPU_INT64U)money * 1000000 * nompricetime) / nomprice));
       }
-        
+
       // печатаем количество минут
       if (((ext == 0) && (FiscMakeSell(DEFAULT_PASS, &count, &price, 0, &tax[0], "”слуги сол€ри€, мин.", &err) != FISC_OK))
             || ((ext) && (FiscMakeSellV2(DEFAULT_PASS, &count, &price, 0, &tax[0], subj, "”слуги сол€ри€, мин.", &err) != FISC_OK)))

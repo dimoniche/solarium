@@ -479,6 +479,7 @@ void UserAppTask(void *p_arg)
                         if (err) {SetFiscalErrorByCode(err);}
                         SaveEventRecord(0, JOURNAL_EVENT_PRINT_BUF, GetTimeSec());
                         GoToPreviousMenu();
+                        ClrFiscalErrorByCode(FR_ERROR_CODE_4D);
                       }
                    }
                   break;
@@ -540,7 +541,7 @@ void UserAppTask(void *p_arg)
                           // напечатаем чек - наличка
                           if (IsFiscalConnected())
                           {
-                              if (PrintFiscalBill(accmoney, (pricetime*accmoney*60)/price, 0) == 0)
+                              if (PrintFiscalBill(accmoney, (pricetime*accmoney*60)/price, 0, price, pricetime) == 0)
                               {
                                   SaveEventRecord(RecentChannel, JOURNAL_EVENT_PRINT_BILL, GetTimeSec());
                               }
@@ -554,10 +555,10 @@ void UserAppTask(void *p_arg)
  
                       if(accmoneyBank)
                       {
-                          // напечатаем чек - наличка
+                          // напечатаем чек - банк
                           if (IsFiscalConnected())
                           {
-                              if (PrintFiscalBill(accmoneyBank, (pricetime*accmoneyBank*60)/price, 1) == 0)
+                              if (PrintFiscalBill(accmoneyBank, (pricetime*accmoneyBank*60)/price, 1, price, pricetime) == 0)
                               {
                                   SaveEventRecord(RecentChannel, JOURNAL_EVENT_PRINT_BILL_ONLINE, GetTimeSec());
                               }

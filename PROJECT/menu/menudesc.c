@@ -1348,7 +1348,7 @@ const TMenuPanel SelectJournalMenuPanel[] = {arr_SelectJournalMenuArray, NULL, 4
 const CPU_INT08U str_ReportMenu_0[] = "      ОТЧЕТЫ";
 const CPU_INT08U str_ReportMenu_1[] = "X-отчет";
 const CPU_INT08U str_ReportMenu_2[] = "Z-отчет";
-const CPU_INT08U str_ReportMenu_3[] = "Z-отчет из буфера";
+const CPU_INT08U str_ReportMenu_3[] = "Аннулирование";
 
 const TMenuLine line_ReportMenu_0 = {
   MENU_LINE_STRING,               // тип пункта меню
