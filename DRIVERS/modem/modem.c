@@ -39,7 +39,7 @@ static void FreeModem(void)
 }
 
 // запись строки в модем
-static void ModemWriteStr(char const *str)
+void ModemWriteStr(char const *str)
 {
     while (*str != 0)
     {

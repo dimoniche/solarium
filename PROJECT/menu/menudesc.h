@@ -51,6 +51,7 @@ extern const TMenuPanel JournalEmptyMenuPanel[];
 extern const TMenuPanel ChannelCountersPanel[];
 extern const TMenuPanel CommonCountersPanel[];
 extern const TMenuPanel bufReportMenuPanel[];
+extern const TMenuPanel CanselCheckMenuPanel[];
 
 extern void PrintUserMenuStr(char* str, CPU_INT08U n);
 extern void PrintEventJournalRecord(TEventRecord *record);

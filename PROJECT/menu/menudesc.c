@@ -1375,7 +1375,7 @@ const TMenuLine line_ReportMenu_3 = {
   MENU_LINE_GOTO_MENU,               // тип пункта меню
   0,                              // доп. флаги  
   (void*)str_ReportMenu_3,        // указатель на текстовую строку или дескриптор
-  (void*)&bufReportMenuPanel                            // панель для перехода
+  (void*)&CanselCheckMenuPanel    // панель для перехода
 };
 
 
@@ -1516,6 +1516,44 @@ const TMenuLine line_bufReportMenu_3 = {
 
 const TMenuLineArray arr_bufReportMenuArray[] = {&line_bufReportMenu_0, &line_bufReportMenu_1, &line_bufReportMenu_2, &line_xReportMenu_3, NULL};
 const TMenuPanel bufReportMenuPanel[] = {arr_bufReportMenuArray, OnEnterZXReportPanel, 4, MENU_PANEL_STATIC};
+
+/***********************************
+  МЕНЮ АННУЛИРОВАНИЕ ЧЕКА
+***********************************/
+const CPU_INT08U str_CanselCheckMenu_0[] = " ";
+const CPU_INT08U str_CanselCheckMenu_1[] = "  Аннулировaть чек?";
+const CPU_INT08U str_CanselCheckMenu_2[] = " ";
+
+const TMenuLine line_CanselCheckMenu_0 = {
+  MENU_LINE_STRING,               // тип пункта меню
+  MENU_FIXED_LINE,                // доп. флаги  
+  (void*)str_CanselCheckMenu_0,       // указатель на текстовую строку или дескриптор
+  NULL                            // панель для перехода
+};
+
+const TMenuLine line_CanselCheckMenu_1 = {
+  MENU_LINE_STRING,               // тип пункта меню
+  0,                              // доп. флаги  
+  (void*)str_CanselCheckMenu_1,       // указатель на текстовую строку или дескриптор
+  NULL                            // панель для перехода
+};
+
+const TMenuLine line_CanselCheckMenu_2 = {
+  MENU_LINE_STRING,               // тип пункта меню
+  0,                              // доп. флаги  
+  (void*)str_CanselCheckMenu_2,        // указатель на текстовую строку или дескриптор
+  NULL                            // панель для перехода
+};
+
+const TMenuLine line_CanselCheckMenu_3 = {
+  MENU_LINE_STRING,               // тип пункта меню
+  0,                              // доп. флаги  
+  (void*)str_xReportMenu_3,        // указатель на текстовую строку или дескриптор
+  NULL                            // панель для перехода
+};
+
+const TMenuLineArray arr_CanselCheckMenuArray[] = {&line_CanselCheckMenu_0, &line_CanselCheckMenu_1, &line_CanselCheckMenu_2, &line_CanselCheckMenu_3, NULL};
+const TMenuPanel CanselCheckMenuPanel[] = {arr_CanselCheckMenuArray, OnEnterZXReportPanel, 4, MENU_PANEL_STATIC};
 
 /***********************************
   МЕНЮ ФР ОТКЛЮЧЕН

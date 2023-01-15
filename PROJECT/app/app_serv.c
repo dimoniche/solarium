@@ -482,6 +482,13 @@ void UserAppTask(void *p_arg)
                         ClrFiscalErrorByCode(FR_ERROR_CODE_4D);
                       }
                    }
+                   else if (GetCurrentMenu() == CanselCheckMenuPanel)
+                      {
+                        int res = CanselFiscalBill();
+                        SaveEventRecord(0, JOURNAL_EVENT_PRINT_X, res);
+                        CheckFiscalStatus();
+                        GoToPreviousMenu();
+                      }
                   break;
                 }
             
