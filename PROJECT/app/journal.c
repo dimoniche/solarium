@@ -373,12 +373,15 @@ void IncCounter(CPU_INT08U ch, CPU_INT32U time, CPU_INT32U money, CPU_INT32U mon
   ReadArrayFram(offsetof(TFramMap, Counters.CounterRun), sizeof(CPU_INT32U), (unsigned char*)&r);
   ReadArrayFram(offsetof(TFramMap, Counters.CounterTime), sizeof(CPU_INT32U), (unsigned char*)&t);
   ReadArrayFram(offsetof(TFramMap, Counters.CounterMoney), sizeof(CPU_INT32U), (unsigned char*)&m);
+  ReadArrayFram(offsetof(TFramMap, Counters.CounterBankMoney), sizeof(CPU_INT32U), (unsigned char*)&b);
   r++;
   t+=time;
-  m+=(money + moneyBank);
+  m+=money;
+  b+=moneyBank;
   WriteArrayFram(offsetof(TFramMap, Counters.CounterRun), sizeof(CPU_INT32U), (unsigned char*)&r);
   WriteArrayFram(offsetof(TFramMap, Counters.CounterTime), sizeof(CPU_INT32U), (unsigned char*)&t);
   WriteArrayFram(offsetof(TFramMap, Counters.CounterMoney), sizeof(CPU_INT32U), (unsigned char*)&m);
+  WriteArrayFram(offsetof(TFramMap, Counters.CounterBankMoney), sizeof(CPU_INT32U), (unsigned char*)&b);
 
   // увеличим длинные счетчики
   ReadArrayFram(offsetof(TFramMap, CountersLong), sizeof(TCountersLong), (unsigned char*)&long_ctrs);

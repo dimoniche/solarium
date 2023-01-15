@@ -650,7 +650,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>solarium_3_37.hex</state>
+                    <state>solarium_3_38.hex</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -668,7 +668,7 @@
             <data>
                 <extensions></extensions>
                 <cmdline></cmdline>
-                <hasPrio>224</hasPrio>
+                <hasPrio>1</hasPrio>
                 <buildSequence>inputOutputBased</buildSequence>
             </data>
         </settings>

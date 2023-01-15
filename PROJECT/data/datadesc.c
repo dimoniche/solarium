@@ -1840,6 +1840,29 @@ TDataDescStruct const CounterMoneyDesc = {
 };
 
 /*************************************
+  ќбщий счетчик денег
+*************************************/
+CPU_INT08U const CounterMoneyBankName[] = "Ѕезнал.,руб.";
+
+TDataDescStruct const CounterMoneyBankDesc = {
+  DATA_DESC_VIEW,           // тип дескриптора
+  DATA_TYPE_ULONG,          // тип параметра
+  DATA_LOC_FRAM,            // расположение параметра
+  DATA_NO_ARRAY,            // признак массива
+  0,                        // размер массива
+  NULL,                     // указатель на десриптор индекса массива
+  (void*)offsetof(TFramMap, Counters.CounterBankMoney),            // указатель на переменную или адрес FRAM
+  NULL,                     // указатель на границы параметра
+  NULL,                     // функци€ по изменению
+  0,                        // смещение между элементами в массиве
+  CounterMoneyBankName,           // указатель на строку названи€ параметра
+  DATA_NO_INDEX,            // признак индексного параметра (список строк)
+  NULL,                     // указатель на список строк дл€ индексного параметра
+  DATA_INIT_DISABLE,
+  0                           
+};
+
+/*************************************
   ќбщий счетчик времени работы
 *************************************/
 CPU_INT08U const CounterTimeName[] = "¬р.раб.";

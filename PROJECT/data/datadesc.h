@@ -140,6 +140,7 @@ extern CPU_INT32U EventJournalIndex;
 
 extern TDataDescStruct const CounterRunDesc;
 extern TDataDescStruct const CounterMoneyDesc;
+extern TDataDescStruct const CounterMoneyBankDesc;
 extern TDataDescStruct const CounterTimeDesc;
 extern TDataDescStruct const CounterChannelRunDesc;
 extern TDataDescStruct const CounterChannelMoneyDesc;

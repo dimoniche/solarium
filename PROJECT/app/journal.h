@@ -131,6 +131,8 @@ typedef struct{
   CPU_INT32U  CounterTime;
   // общее Сумма денег
   CPU_INT32U  CounterMoney;
+  // общее Сумма денег by card - безналичных
+  CPU_INT32U  CounterBankMoney;
   
   // счетчики купюр в купюрнике по номиналам
   CPU_INT32U  CounterBillNominals[24];

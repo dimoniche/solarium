@@ -412,6 +412,13 @@ const TMenuLine line_CommonCountersMenu_2 = {
   NULL                            // панель дл€ перехода
 };
 
+const TMenuLine line_CommonCountersMenu_4 = {
+  MENU_LINE_SHOW_DESC,               // тип пункта меню
+  0,                              // доп. флаги  
+  (void*)&CounterMoneyBankDesc,      // указатель на текстовую строку или дескриптор
+  NULL                            // панель дл€ перехода
+};
+
 const TMenuLine line_CommonCountersMenu_3 = {
   MENU_LINE_SHOW_DESC,               // тип пункта меню
   0,                              // доп. флаги  
@@ -419,8 +426,8 @@ const TMenuLine line_CommonCountersMenu_3 = {
   NULL                            // панель дл€ перехода
 };
 
-const TMenuLineArray arr_CommonCountersArray[] = {&line_CommonCountersMenu_0, &line_CommonCountersMenu_1, &line_CommonCountersMenu_2, &line_CommonCountersMenu_3, NULL};
-const TMenuPanel CommonCountersPanel[] = {arr_CommonCountersArray, NULL, 4, MENU_PANEL_STATIC};
+const TMenuLineArray arr_CommonCountersArray[] = {&line_CommonCountersMenu_0, &line_CommonCountersMenu_1, &line_CommonCountersMenu_2, &line_CommonCountersMenu_4, &line_CommonCountersMenu_3, NULL};
+const TMenuPanel CommonCountersPanel[] = {arr_CommonCountersArray, NULL, 5, MENU_PANEL_STATIC};
 
 /***********************************
   ћ≈Ќё ќЅўјя —“ј“»—“» ј ƒЋ»ЌЌџ≈ —„≈“„» »
