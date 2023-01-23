@@ -156,6 +156,8 @@ typedef struct{
   CPU_INT32U  CounterRunLong;
   CPU_INT32U  CounterTimeLong;
   CPU_INT32U  CounterMoneyLong;
+  CPU_INT32U  CounterMoneyBankLong;
+  
   CPU_INT16U  crc;
 }TCountersLong;
 

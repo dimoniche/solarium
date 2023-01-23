@@ -427,7 +427,7 @@ const TMenuLine line_CommonCountersMenu_3 = {
 };
 
 const TMenuLineArray arr_CommonCountersArray[] = {&line_CommonCountersMenu_0, &line_CommonCountersMenu_1, &line_CommonCountersMenu_2, &line_CommonCountersMenu_4, &line_CommonCountersMenu_3, NULL};
-const TMenuPanel CommonCountersPanel[] = {arr_CommonCountersArray, NULL, 5, MENU_PANEL_STATIC};
+const TMenuPanel CommonCountersPanel[] = {arr_CommonCountersArray, NULL, 5, MENU_PANEL_STANDARD};
 
 /***********************************
   МЕНЮ ОБЩАЯ СТАТИСТИКА ДЛИННЫЕ СЧЕТЧИКИ
@@ -455,6 +455,13 @@ const TMenuLine line_CommonCountersLongMenu_2 = {
   NULL                            // панель для перехода
 };
 
+const TMenuLine line_CommonCountersLongMenu_4 = {
+  MENU_LINE_SHOW_DESC,               // тип пункта меню
+  0,                              // доп. флаги  
+  (void*)&CounterLongMoneyBankDesc,       // указатель на текстовую строку или дескриптор
+  NULL                            // панель для перехода
+};
+
 const TMenuLine line_CommonCountersLongMenu_3 = {
   MENU_LINE_SHOW_DESC,               // тип пункта меню
   0,                              // доп. флаги  
@@ -462,8 +469,8 @@ const TMenuLine line_CommonCountersLongMenu_3 = {
   NULL                            // панель для перехода
 };
 
-const TMenuLineArray arr_CommonCountersLongArray[] = {&line_CommonCountersLongMenu_0, &line_CommonCountersLongMenu_1, &line_CommonCountersLongMenu_2, &line_CommonCountersLongMenu_3,  NULL};
-const TMenuPanel CommonCountersLongPanel[] = {arr_CommonCountersLongArray, NULL, 4, MENU_PANEL_STATIC};
+const TMenuLineArray arr_CommonCountersLongArray[] = {&line_CommonCountersLongMenu_0, &line_CommonCountersLongMenu_1, &line_CommonCountersLongMenu_2, &line_CommonCountersLongMenu_4, &line_CommonCountersLongMenu_3,  NULL};
+const TMenuPanel CommonCountersLongPanel[] = {arr_CommonCountersLongArray, NULL, 4, MENU_PANEL_STANDARD};
 
 /***********************************
   МЕНЮ НАСТРОЙКИ

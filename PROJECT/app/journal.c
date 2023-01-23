@@ -391,7 +391,8 @@ void IncCounter(CPU_INT08U ch, CPU_INT32U time, CPU_INT32U money, CPU_INT32U mon
   long_ctrs.CounterChannelBankMoneyLong[ch] += moneyBank;
   long_ctrs.CounterRunLong++;
   long_ctrs.CounterTimeLong += time;
-  long_ctrs.CounterMoneyLong += (money + moneyBank);
+  long_ctrs.CounterMoneyLong += money;
+  long_ctrs.CounterMoneyBankLong += moneyBank;
   long_ctrs.crc = CRC16((unsigned char*)&long_ctrs, offsetof(TCountersLong, crc));
   WriteArrayFram(offsetof(TFramMap, CountersLong), sizeof(TCountersLong), (unsigned char*)&long_ctrs);
 }  

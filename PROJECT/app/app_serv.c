@@ -272,7 +272,6 @@ void UserAppTask(void *p_arg)
                   UserPrintMoneyMenu();  
                   RefreshMenu();
                 }
-                SaveEventRecord(RecentChannel, JOURNAL_EVENT_MONEY_COIN, money);
                 
                 CPU_INT32U price=1, pricetime=0, maxtime = 0xffffffff;
                 GetRecentChannelPrice(RecentChannel, &price, &pricetime);
@@ -567,6 +566,7 @@ void UserAppTask(void *p_arg)
                           {
                               if (PrintFiscalBill(accmoneyBank, (pricetime*accmoneyBank*60)/price, 1, price, pricetime) == 0)
                               {
+                                  SaveEventRecord(RecentChannel, JOURNAL_EVENT_MONEY_COIN, accmoneyBank);
                                   SaveEventRecord(RecentChannel, JOURNAL_EVENT_PRINT_BILL_ONLINE, GetTimeSec());
                               }
                               else

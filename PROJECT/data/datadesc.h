@@ -176,6 +176,7 @@ extern TDataDescStruct const BillCounterDesc;
 
 extern TDataDescStruct const CounterLongRunDesc;
 extern TDataDescStruct const CounterLongMoneyDesc;
+extern TDataDescStruct const CounterLongMoneyBankDesc;
 extern TDataDescStruct const CounterLongTimeDesc;
 
 extern TDataDescStruct const MasterPassTempDesc;
