@@ -561,12 +561,13 @@ void UserAppTask(void *p_arg)
  
                       if(accmoneyBank)
                       {
+                          SaveEventRecord(RecentChannel, JOURNAL_EVENT_MONEY_COIN, accmoneyBank);
+
                           // напечатаем чек - банк
                           if (IsFiscalConnected())
                           {
                               if (PrintFiscalBill(accmoneyBank, (pricetime*accmoneyBank*60)/price, 1, price, pricetime) == 0)
                               {
-                                  SaveEventRecord(RecentChannel, JOURNAL_EVENT_MONEY_COIN, accmoneyBank);
                                   SaveEventRecord(RecentChannel, JOURNAL_EVENT_PRINT_BILL_ONLINE, GetTimeSec());
                               }
                               else

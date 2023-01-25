@@ -470,7 +470,7 @@ const TMenuLine line_CommonCountersLongMenu_3 = {
 };
 
 const TMenuLineArray arr_CommonCountersLongArray[] = {&line_CommonCountersLongMenu_0, &line_CommonCountersLongMenu_1, &line_CommonCountersLongMenu_2, &line_CommonCountersLongMenu_4, &line_CommonCountersLongMenu_3,  NULL};
-const TMenuPanel CommonCountersLongPanel[] = {arr_CommonCountersLongArray, NULL, 4, MENU_PANEL_STANDARD};
+const TMenuPanel CommonCountersLongPanel[] = {arr_CommonCountersLongArray, NULL, 5, MENU_PANEL_STANDARD};
 
 /***********************************
   Ã≈Õﬁ Õ¿—“–Œ… »
