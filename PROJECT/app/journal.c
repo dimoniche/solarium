@@ -423,7 +423,7 @@ void CheckLongCounters(void)
 
 void ClearCounters(void)
 {
-  SetArrayFram(offsetof(TFramMap, Counters), sizeof(CPU_INT32U)*((CHANNELS_NUM)*4 + 3), 0x00);
+  SetArrayFram(offsetof(TFramMap, Counters), sizeof(CPU_INT32U)*((CHANNELS_NUM)*4 + 4), 0x00);
 }
 
 /// инкремент счетчика купюр по номиналам
