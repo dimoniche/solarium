@@ -81,6 +81,8 @@ void UserAppTask(void *p_arg)
   int event;
   CPU_INT32U temp;
   static CPU_INT08U fr_conn_ctr = 0;
+  // время последнего внесения денег по импульсному входу
+  static CPU_INT32U time_last_insert_coin = 0;
 
   {
     CPU_INT32U m=0;
@@ -164,7 +166,7 @@ void UserAppTask(void *p_arg)
                 }
                 break;
               }
-               
+
               if (ChannelsWaitDeffered[RecentChannel] != 0)
               {
                   UserPrintDeferredWaitMenu(RecentChannel);
@@ -262,6 +264,9 @@ void UserAppTask(void *p_arg)
                 CPU_INT32U money, accmoney;
                 GetData(&CoinPerPulseDesc, &cpp, 0, DATA_FLAG_SYSTEM_INDEX);
                 
+                // время внесения монеты (+1 дополнительная пауза против ложного срабатывания в случае если секунда произойдет сразу же)
+                time_last_insert_coin = GetTimeSec() + 1;
+
                 money = cpp*GetResetCoinCount();
                 accmoney = GetAcceptedBankMoney();
                 accmoney += money;
@@ -524,7 +529,9 @@ void UserAppTask(void *p_arg)
                   max_msg = 0;
                   break;
                 }
-              
+
+              // еще не прошло время с последнего внесения монеты (больше секунды должно пройти)
+              if(GetTimeSec() <= time_last_insert_coin) break;
 
               if (UserMenuState == USER_STATE_ACCEPT_MONEY)
                 { // пользователь внес деньги и нажал СТАРТ
@@ -1075,8 +1082,23 @@ void UserPrintFirstMenu(CPU_INT08U recentchannel)
         {
           sprintf(buf, "АППАРАТ РАБОТАЕТ");
           PrintUserMenuStr(buf, 1);
-          sprintf(buf, "ДО СЛЕД.СЕАНСА:");
+          
+          switch (ChannelsState[recentchannel])
+          {
+            case CHANNEL_STATE_EMPTY:
+              break;
+            case CHANNEL_STATE_PAUSE_BEFORE:
+              sprintf(buf, "ДО ВКЛ.ЛАМП:");
+              break;
+            case CHANNEL_STATE_WORK:
+              sprintf(buf, "ДО ОКОН.ЗАГАРА:");
+              break;
+            case CHANNEL_STATE_PAUSE_AFTER:
+              sprintf(buf, "ДО ОКОН.ВЕНТИЛ:");
+              break;
+          }
           PrintUserMenuStr(buf, 2);
+
           PrintSecToHourMinSec(buf, GetChannelsTimeForFree(recentchannel));
           PrintUserMenuStr(buf, 3);
         }
@@ -1133,10 +1155,10 @@ CPU_INT32U GetChannelsTimeForFree(CPU_INT08U ch)
         case CHANNEL_STATE_EMPTY:
           break;
         case CHANNEL_STATE_PAUSE_BEFORE:
-          res = payedtime+aftertime+ChannelsCounters[ch];
+          res = payedtime;
           break;
         case CHANNEL_STATE_WORK:
-          res = aftertime+ChannelsCounters[ch];
+          res = aftertime;
           break;
         case CHANNEL_STATE_PAUSE_AFTER:
           res = ChannelsCounters[ch];
