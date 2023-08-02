@@ -796,7 +796,7 @@ void UserPrintMoneyMenu(void)
         {
           LED_on();
           if (time >= maxtime*60) sprintf(&buf[strlen(buf)], "Ã¿ —.—≈¿Õ—");
-          else sprintf(&buf[strlen(buf)], "¿œœ.√Œ“Œ¬");
+          else sprintf(&buf[strlen(buf)], "¿œœ¿–¿“ √Œ“Œ¬");
         }
       else
         {
@@ -1088,18 +1088,18 @@ void UserPrintFirstMenu(CPU_INT08U recentchannel)
             case CHANNEL_STATE_EMPTY:
               break;
             case CHANNEL_STATE_PAUSE_BEFORE:
-              sprintf(buf, "ƒŒ ¬ À.À¿Ãœ:");
+              sprintf(buf, "Õ¿◊¿ÀŒ —≈¿Õ—¿:");
               break;
             case CHANNEL_STATE_WORK:
-              sprintf(buf, "ƒŒ Œ ŒÕ.«¿√¿–¿:");
+              sprintf(buf, "»ƒ≈“ —≈¿Õ— «¿√¿–¿:");
               break;
             case CHANNEL_STATE_PAUSE_AFTER:
-              sprintf(buf, "ƒŒ Œ ŒÕ.¬≈Õ“»À:");
+              sprintf(buf, "¬≈Õ“»Àﬂ÷»ﬂ:");
               break;
           }
           PrintUserMenuStr(buf, 2);
 
-          PrintSecToHourMinSec(buf, GetChannelsTimeForFree(recentchannel));
+          PrintSecToMinSec(buf, GetChannelsTimeForFree(recentchannel));
           PrintUserMenuStr(buf, 3);
         }
       else
@@ -1155,13 +1155,13 @@ CPU_INT32U GetChannelsTimeForFree(CPU_INT08U ch)
         case CHANNEL_STATE_EMPTY:
           break;
         case CHANNEL_STATE_PAUSE_BEFORE:
-          res = payedtime;
+          res = beforetime;
           break;
         case CHANNEL_STATE_WORK:
-          res = aftertime;
+          res = payedtime;
           break;
         case CHANNEL_STATE_PAUSE_AFTER:
-          res = ChannelsCounters[ch];
+          res = aftertime;
           break;      
       }
 
