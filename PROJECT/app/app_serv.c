@@ -1141,27 +1141,20 @@ void UserPrintFirstMenu(CPU_INT08U recentchannel)
 // получить время до окончания занятости канала
 CPU_INT32U GetChannelsTimeForFree(CPU_INT08U ch)
 {
-  CPU_INT32U payedtime = ChannelsPayedTime[ch];
-  CPU_INT32U beforetime = 0;
-  CPU_INT32U aftertime = 0;
   CPU_INT32U res = 0;
-
-  GetData(&TimeOutBeforeDesc, &beforetime, ch, DATA_FLAG_DIRECT_INDEX);
-  GetData(&TimeOutAfterDesc, &aftertime, ch, DATA_FLAG_DIRECT_INDEX);
-  aftertime *= 60;
     
   switch (ChannelsState[ch])
       {
         case CHANNEL_STATE_EMPTY:
           break;
         case CHANNEL_STATE_PAUSE_BEFORE:
-          res = beforetime;
+          res = ChannelsCounters[ch];
           break;
         case CHANNEL_STATE_WORK:
-          res = payedtime;
+          res = ChannelsCounters[ch];
           break;
         case CHANNEL_STATE_PAUSE_AFTER:
-          res = aftertime;
+          res = ChannelsCounters[ch];
           break;      
       }
 
