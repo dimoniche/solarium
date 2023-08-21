@@ -1117,16 +1117,32 @@ void UserPrintFirstMenu(CPU_INT08U recentchannel)
   GetDataStr(&NameChannelDesc, (CPU_INT08U*)buf, recentchannel, DATA_FLAG_DIRECT_INDEX);
   sprintf(&buf[strlen(buf)], " %d", recentchannel+1);
   PrintUserMenuStr(buf, 0);
+  
   CPU_INT32U price=1, time=0;
   GetRecentChannelPrice(recentchannel, &price, &time);
   sprintf(buf, "ЦЕНА %dруб./%dмин.", price, time);
   PrintUserMenuStr(buf, 1);
+
   if (IsChannelOn(recentchannel))
     {
-      sprintf(buf, "ВЫБЕРИТЕ ДР.КАНАЛ");
-      PrintUserMenuStr(buf, 2);
-      sprintf(buf, "ОСТАЛОСb: ");
-      PrintSecToHourMinSec(&buf[strlen(buf)], GetChannelsTimeForFree(recentchannel));
+          switch (ChannelsState[recentchannel])
+          {
+            case CHANNEL_STATE_EMPTY:
+              break;
+            case CHANNEL_STATE_PAUSE_BEFORE:
+              sprintf(buf, "НАЧАЛО СЕАНСА:");
+              break;
+            case CHANNEL_STATE_WORK:
+              sprintf(buf, "ИДЕТ СЕАНС ЗАГАРА:");
+              break;
+            case CHANNEL_STATE_PAUSE_AFTER:
+              sprintf(buf, "ВЕНТИЛЯЦИЯ:");
+              break;
+          }
+          PrintUserMenuStr(buf, 2);
+
+          PrintSecToMinSec(buf, GetChannelsTimeForFree(recentchannel));
+          PrintUserMenuStr(buf, 3);
     }
   else
     {
@@ -1134,8 +1150,8 @@ void UserPrintFirstMenu(CPU_INT08U recentchannel)
       PrintUserMenuStr(buf, 2);
       sprintf(buf, "И НАЖМИТЕ ");
       GetDataStr(&StartButtonNameDesc, (CPU_INT08U*)&buf[strlen(buf)], 0, DATA_FLAG_SYSTEM_INDEX);
+      PrintUserMenuStr(buf, 3);
     }
-  PrintUserMenuStr(buf, 3);
 }
 
 // получить время до окончания занятости канала
