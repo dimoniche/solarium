@@ -97,10 +97,10 @@ P1.19	MK_P33	«c»
   FIO1MASK_bit.P1_31 = 0;
 
   // 4
-  PINSEL1_bit.P0_25 = 0x0;
+  /*PINSEL1_bit.P0_25 = 0x0;
   PINMODE1_bit.P0_25 = 0;
   FIO0DIR_bit.P0_25 = 0;
-  FIO0MASK_bit.P0_25 = 0;
+  FIO0MASK_bit.P0_25 = 0;*/
   
   // 5
   PINSEL3_bit.P1_24 = 0x0;
@@ -184,7 +184,7 @@ void  KbrdTask(void *p_arg)
       if (!FIO1PIN_bit.P1_25) state |=  (1UL << KEY_DEFERRED_CH1);
       if (!FIO1PIN_bit.P1_23) state |=  (1UL << KEY_DEFERRED_CH2);
       if (!FIO1PIN_bit.P1_31) state |=  (1UL << KEY_DEFERRED_CH3);
-      if (!FIO0PIN_bit.P0_25) state |=  (1UL << KEY_DEFERRED_CH4);
+      //if (!FIO0PIN_bit.P0_25) state |=  (1UL << KEY_DEFERRED_CH4);
       if (!FIO1PIN_bit.P1_24) state |=  (1UL << KEY_DEFERRED_CH5);
       if (!FIO0PIN_bit.P0_26) state |=  (1UL << KEY_DEFERRED_CH6);
       if (!FIO1PIN_bit.P1_29) state |=  (1UL << KEY_DEFERRED_CH7);

@@ -103,7 +103,7 @@ void InputCapture_ISR(void)
   if (ir & 0x10)
     {// CR0 interrupt
   
-      if (FIO0PIN_bit.P0_23)
+      if (FIO0PIN_bit.P0_25)
         {// пришел задний фронт
           CPU_INT32U cr=T3CR0;
           if (((cr-period) > COIN_IMP_MIN_LEN)
@@ -121,7 +121,7 @@ void InputCapture_ISR(void)
 extern CPU_INT32U  BSP_CPU_PclkFreq (CPU_INT08U  pclk);
 
 /*
-P0.23	MK_P9	IMPULSE OUTPUT (импульсный выход монетоприемника)
+P0.23	MK_P9	IMPULSE OUTPUT (импульсный выход монетоприемника) -> P0.25 MK_P7
 P0.24	MK_P8	INHIBIT (блокировка)
 */
 // инициализация импульсного входа
@@ -142,10 +142,10 @@ void  InitImpInput (void)
     PCONP_bit.PCTIM3 = 1;
     PCLKSEL1_bit.PCLK_TIMER3 = 2;
       
-    PINSEL1_bit.P0_23 = 0x3;
-    PINMODE1_bit.P0_23 = 0;
-    FIO0DIR_bit.P0_23  = 0;
-    FIO0MASK_bit.P0_23 = 0;
+    PINSEL1_bit.P0_25 = 0x3;
+    PINMODE1_bit.P0_25 = 0;
+    FIO0DIR_bit.P0_25  = 0;
+    FIO0MASK_bit.P0_25 = 0;
 
     // inhibit
     PINSEL1_bit.P0_24 = 0x0;
