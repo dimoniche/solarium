@@ -141,7 +141,12 @@ void  InitImpInput (void)
 
     PCONP_bit.PCTIM3 = 1;
     PCLKSEL1_bit.PCLK_TIMER3 = 2;
-      
+
+    PINSEL1_bit.P0_23 = 0x3;
+    PINMODE1_bit.P0_23 = 0;
+    FIO0DIR_bit.P0_23  = 0;
+    FIO0MASK_bit.P0_23 = 0;
+
     PINSEL1_bit.P0_25 = 0x3;
     PINMODE1_bit.P0_25 = 0;
     FIO0DIR_bit.P0_25  = 0;
