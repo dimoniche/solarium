@@ -85,20 +85,27 @@ void UserAppTask(void *p_arg)
   static CPU_INT32U time_last_insert_coin = 0;
 
   {
-    CPU_INT32U m=0;
-    GetData(&AcceptedMoneyDesc, &m, 0, DATA_FLAG_SYSTEM_INDEX);     
-    if (m)
-    {
-         EnabledChannelsNum = 0;
-         for (CPU_INT08U i=0; i<CHANNELS_NUM; i++)
-         {
-            CPU_INT32U en = 0;
-            GetData(&EnableChannelDesc, &en, i, DATA_FLAG_DIRECT_INDEX);
-            if (en) {EnabledChannelsNum++;}
-         }
-         UserMenuState = USER_STATE_ACCEPT_MONEY;
-      
-    }
+     EnabledChannelsNum = 0;
+     for (CPU_INT08U i=0; i<CHANNELS_NUM; i++)
+     {
+        CPU_INT32U en = 0;
+        GetData(&EnableChannelDesc, &en, i, DATA_FLAG_DIRECT_INDEX);
+        if (en) {EnabledChannelsNum++;}
+     }
+     
+     if(EnabledChannelsNum == 1)
+     {
+          UserMenuState = USER_STATE_ACCEPT_MONEY;
+          CoinEnable();
+     }
+  }
+  {
+      CPU_INT32U m=0;
+      GetData(&AcceptedMoneyDesc, &m, 0, DATA_FLAG_SYSTEM_INDEX);     
+      if (m)
+      {
+           UserMenuState = USER_STATE_ACCEPT_MONEY; 
+      }
   }
     
   incassation = 0;
@@ -400,8 +407,19 @@ void UserAppTask(void *p_arg)
             case EVENT_KEY_STOP:
               if ((GetMode() != MODE_WORK) || (incassation)) break;
               if (TstCriticalErrors()) {UserPrintErrorMenu(); RefreshMenu(); break;}
-              UserMenuState = USER_STATE_FIRST_PAGE;
-              UserPrintFirstMenu(RecentChannel);
+              
+              if ((EnabledChannelsNum == 1) && (!IsChannelOn(RecentChannel)))
+              {
+                  UserMenuState = USER_STATE_ACCEPT_MONEY;
+                  UserPrintMoneyMenu();
+                  CoinEnable();
+              }
+              else
+              {
+                  UserMenuState = USER_STATE_FIRST_PAGE;
+                  UserPrintFirstMenu(RecentChannel);
+              }
+
               RefreshMenu();
               if (IsValidatorConnected()) CC_CmdBillType(0x000000, 0x000000, ADDR_FL);
               break;
@@ -430,12 +448,12 @@ void UserAppTask(void *p_arg)
                       UserPrintThanksMenu();
                       RefreshMenu();
                       UserMenuState = USER_STATE_SHOW_THANKS;
+                      ThanksCtr = 3;
                     }
                   else
                     {
                       UserMenuState = USER_STATE_FIRST_PAGE;
                     }
-                  ThanksCtr = 3;
                   LED_off();
               }
               break;
@@ -507,8 +525,8 @@ void UserAppTask(void *p_arg)
               // находимся в рабочем режиме
               // --------------------------
               
-              if (EnabledChannelsNum == 0) break;              
-                 
+              if (EnabledChannelsNum == 0) break;
+
               if (UserMenuState == USER_STATE_FIRST_PAGE)
                 { // пользователь выбрал канал и нажал СТАРТ
                   if (IsChannelOn(RecentChannel)) break;
@@ -521,6 +539,8 @@ void UserAppTask(void *p_arg)
                     break;
                   }
                   FPost();
+                  if (EnabledChannelsNum == 1) break;
+                  
                   UserMenuState = USER_STATE_ACCEPT_MONEY;
                   UserPrintMoneyMenu();
                   RefreshMenu();
@@ -612,26 +632,21 @@ void UserAppTask(void *p_arg)
                               UserPrintThanksMenu();
                               RefreshMenu();
                               UserMenuState = USER_STATE_SHOW_THANKS;
+                              ThanksCtr = 5;
                             }
                           else
                             {
                               UserMenuState = USER_STATE_FIRST_PAGE;
                             }
-                          ThanksCtr = 5;
                       }
                     }
                   else
                     { // денег недостаточно для работы
-                      
-                    
                     
                     }
                   break;
                 }
-                
-                  
               break;
-              
           }
         }
       else 
@@ -767,7 +782,42 @@ void UserPrintMoneyMenu(void)
 {
   char buf[32];
   CPU_INT32U accmoney;
-    
+
+  if (EnabledChannelsNum == 1)
+  {
+      CPU_INT32U price=1, pricetime=0, time=0;
+      
+      GetRecentChannelPrice(RecentChannel, &price, &pricetime);
+      sprintf(buf, "ЦЕНА %dруб./%dмин.", price, pricetime);
+      PrintUserMenuStr(buf, 0);
+
+      accmoney = GetAcceptedMoney() + GetAcceptedBankMoney();
+      sprintf(buf, "ПРИНЯТО %d руб.", accmoney);
+      PrintUserMenuStr(buf, 1);
+
+      time = (pricetime*accmoney*60)/price;
+      sprintf(buf, "ОПЛАЧЕНО %d:%02d", time/60, time%60);
+      PrintUserMenuStr(buf, 2);
+      
+      CPU_INT32U mintime=0, maxtime=0;
+      GetData(&MinWorkTimeDesc, &mintime, RecentChannel, DATA_FLAG_DIRECT_INDEX);  
+      GetData(&MaxWorkTimeDesc, &maxtime, RecentChannel, DATA_FLAG_DIRECT_INDEX);
+
+      if (time >= mintime*60)
+      {
+          LED_on();
+          sprintf(buf, "НАЖМИТЕ CTAPT");
+      }
+      else
+      {
+          LED_off();
+          sprintf(buf, "ВНЕСИТЕ ДЕНbГИ");
+      }
+      
+      PrintUserMenuStr(buf, 3);
+      return;
+  }
+              
   sprintf(buf, "Внесите деньги");
   PrintUserMenuStr(buf, 0);
   accmoney = GetAcceptedMoney() + GetAcceptedBankMoney();
@@ -1024,12 +1074,17 @@ void WorkServer(void)
             { // закончили паузу
               ChannelsState[i] = CHANNEL_STATE_EMPTY;  
               ChannelsPayedTime[i] = 0;
+              
+              if (EnabledChannelsNum == 1)
+              {
+                  UserMenuState = USER_STATE_ACCEPT_MONEY;
+                  UserPrintMoneyMenu();
+                  CoinEnable();
+              }
             }
           break;      
       }
-    
     }
-  
 }
 
 
